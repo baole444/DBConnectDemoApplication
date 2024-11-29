@@ -1,0 +1,31 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+sourceCompatibility = '21'
+targetCompatibility = '21'
+
+group = 'Sky.Cat'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    flatDir {
+        dirs 'Lib'
+    }
+    mavenCentral()
+}
+
+dependencies {
+    implementation fileTree('Lib') { include '*.jar' }
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+application {
+    mainClass = 'Sky.Cat.Main'
+}
