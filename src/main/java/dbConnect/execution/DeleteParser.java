@@ -139,7 +139,7 @@ public class DeleteParser {
             if (_idField == null) {
                 throw new IllegalArgumentException("Model is missing an _id field!");
             }
-
+            _idField.setAccessible(true);
             ObjectId idKeyValue = (ObjectId) _idField.get(model);
 
             if (idKeyValue == null) {
