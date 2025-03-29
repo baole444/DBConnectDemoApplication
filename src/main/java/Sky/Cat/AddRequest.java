@@ -11,13 +11,8 @@ import Sky.Listener.EventListener;
 import Sky.Listener.EventType;
 import dbConnect.DBConnect;
 import dbConnect.models.ITRequest;
-import dbConnect.models.constrain.MaxLength;
-
 import javax.swing.*;
-import javax.swing.text.DateFormatter;
 import java.awt.*;
-import java.lang.annotation.Annotation;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -31,6 +26,7 @@ public class AddRequest extends javax.swing.JFrame {
 
         loadDateSelector();
 
+        validateEntry();
     }
 
     /**
@@ -116,17 +112,6 @@ public class AddRequest extends javax.swing.JFrame {
         });
 
         jLabel5.setText("Custom");
-
-        requestTypeField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                requestTypeFieldActionPerformed(evt);
-            }
-        });
-        requestTypeField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                requestTypeFieldKeyReleased(evt);
-            }
-        });
 
         jLabel6.setText("Default task");
 
@@ -298,10 +283,6 @@ public class AddRequest extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
-    private void requestTypeFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_requestTypeFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_requestTypeFieldActionPerformed
-
     private void requestTypeComboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_requestTypeComboxActionPerformed
         String reqType = (String) requestTypeCombox.getSelectedItem();
 
@@ -342,10 +323,6 @@ public class AddRequest extends javax.swing.JFrame {
         detailValidator();
     }//GEN-LAST:event_requestDetailFieldKeyReleased
 
-    private void requestTypeFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_requestTypeFieldKeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_requestTypeFieldKeyReleased
-
     private void clearFormFields() {
         requestTypeField.setText(null);
         requestDateField.setText(null);
@@ -353,6 +330,7 @@ public class AddRequest extends javax.swing.JFrame {
         requestEmailField.setText(null);
         requestNameField.setText(null);
         requestTypeCombox.setSelectedIndex(-1);
+        validateEntry();
     }
 
     private void loadDateSelector() {
@@ -386,88 +364,84 @@ public class AddRequest extends javax.swing.JFrame {
             javax.swing.JOptionPane.showMessageDialog(this, "Cannot add request. Problem founded: \n >" + e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
     }
+    private void validateEntry() {
+        nameValidator();
+        dateValidator();
+        emailValidator();
+        detailValidator();
+    }
 
     private void nameValidator() {
             String name = requestNameField.getText();
-            if (name != null ) {
-                if (name.isBlank()) {
-                    nameWarnLable.setForeground(new Color(255,153,51));
-                    nameWarnLable.setText("Warning: The name is blank!" );
-                    addRequestButton.setEnabled(false);
-                } else if (name.length() > 255) {
-                    nameWarnLable.setForeground(new Color(255,153,51));
-                    nameWarnLable.setText("Warning: name's length exceeded limit and will be trimmed! (" + name.length() + "/255" );
-                    addRequestButton.setEnabled(true);
-                } else {
-                    nameWarnLable.setForeground(new Color(0,153,0));
-                    nameWarnLable.setText("Name checked");
-                    addRequestButton.setEnabled(true);
-                }
-            } else {
+            if (name.isEmpty()) {
                 nameWarnLable.setForeground(new Color(255,51,51));
                 nameWarnLable.setText("Error: name field not allowed to be empty" );
                 addRequestButton.setEnabled(false);
+            } else if (name.isBlank()) {
+                nameWarnLable.setForeground(new Color(255,153,51));
+                nameWarnLable.setText("Warning: The name is blank!" );
+                addRequestButton.setEnabled(false);
+            } else if (name.length() > 255) {
+                nameWarnLable.setForeground(new Color(255,153,51));
+                nameWarnLable.setText("Warning: name's length exceeded limit and will be trimmed! (" + name.length() + "/255" );
+                addRequestButton.setEnabled(true);
+            } else {
+                nameWarnLable.setForeground(new Color(0,153,0));
+                nameWarnLable.setText("Name checked");
+                addRequestButton.setEnabled(true);
             }
     }
 
     private void dateValidator() {
-        String name = requestDateField.getText();
-        if (name != null ) {
-            if (name.isBlank()) {
-                dayWarnLabel.setForeground(new Color(255,153,51));
-                dayWarnLabel.setText("Warning: The date is blank!" );
-                addRequestButton.setEnabled(false);
-            } else {
-                dayWarnLabel.setForeground(new Color(0,153,0));
-                dayWarnLabel.setText("Date checked");
-                addRequestButton.setEnabled(true);
-            }
-        } else {
+        String date = requestDateField.getText();
+        if (date.isEmpty()) {
             dayWarnLabel.setForeground(new Color(255,51,51));
             dayWarnLabel.setText("Error: Please select a day!" );
             addRequestButton.setEnabled(false);
+        } else if (date.isBlank()) {
+            dayWarnLabel.setForeground(new Color(255,153,51));
+            dayWarnLabel.setText("Warning: The date is blank!" );
+            addRequestButton.setEnabled(false);
+        } else {
+            dayWarnLabel.setForeground(new Color(0,153,0));
+            dayWarnLabel.setText("Date checked");
+            addRequestButton.setEnabled(true);
         }
     }
 
     private void emailValidator() {
         String email = requestEmailField.getText();
-        if (email != null ) {
-            if (email.isBlank()) {
-                emailWarnLable.setForeground(new Color(255,153,51));
-                emailWarnLable.setText("Warning: The email is blank!" );
-                addRequestButton.setEnabled(false);
-            } else if (email.length() > 255) {
-                emailWarnLable.setForeground(new Color(255,153,51));
-                emailWarnLable.setText("Warning: email's length exceeded limit and will be trimmed! (" + email.length() + "/255" );
-                addRequestButton.setEnabled(true);
-            } else {
-                emailWarnLable.setForeground(new Color(0,153,0));
-                emailWarnLable.setText("Email checked");
-                addRequestButton.setEnabled(true);
-            }
-        } else {
+        if (email.isEmpty()) {
             emailWarnLable.setForeground(new Color(255,51,51));
             emailWarnLable.setText("Error: email field not allowed to be empty" );
             addRequestButton.setEnabled(false);
+        } else if (email.isBlank()) {
+            emailWarnLable.setForeground(new Color(255,153,51));
+            emailWarnLable.setText("Warning: The email is blank!" );
+            addRequestButton.setEnabled(false);
+        } else if (email.length() > 255) {
+            emailWarnLable.setForeground(new Color(255,153,51));
+            emailWarnLable.setText("Warning: email's length exceeded limit and will be trimmed! (" + email.length() + "/255" );
+            addRequestButton.setEnabled(true);
+        } else {
+            emailWarnLable.setForeground(new Color(0,153,0));
+            emailWarnLable.setText("Email checked");
+            addRequestButton.setEnabled(true);
         }
     }
 
     private void detailValidator() {
         String details = requestDetailField.getText();
-        if (details != null ) {
-            if (details.length() > 255) {
-                detailWarnLabel.setForeground(new Color(255,153,51));
-                wordCountDetail.setForeground(new Color(255,153,51));
-                detailWarnLabel.setText("Warning: details length exceeded limit and will be trimmed!");
-                wordCountDetail.setText("(" + details.length() + "/255)");
-            } else {
-                detailWarnLabel.setForeground(new Color(0,153,0));
-                wordCountDetail.setText("(" + details.length() + "/255)");
-            }
+        if (details.length() > 255) {
+            detailWarnLabel.setForeground(new Color(255,153,51));
+            wordCountDetail.setForeground(new Color(255,153,51));
+            detailWarnLabel.setText("Warning: details length exceeded limit and will be trimmed!");
+            wordCountDetail.setText("(" + details.length() + "/255)");
+        } else {
+            detailWarnLabel.setForeground(new Color(0,153,0));
+            wordCountDetail.setText("(" + details.length() + "/255)");
         }
     }
-
-
 
     public static void main(String args[]) {
         try {

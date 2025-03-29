@@ -19,18 +19,35 @@ public class Main extends javax.swing.JFrame implements DataListener {
     public enum DatabaseMode {
         None,
         MySQL,
-        MongoDB;
+        MongoDB
     }
+
+    public enum SearchCondition {
+        ID("ReqID", "_id"),
+        Name("ReqName", "ReqName"),
+        Email("ReqEmail", "ReqEmail"),
+        Task("ReqType", "ReqType");
+
+        private final String sql;
+        private final String mongo;
+
+        SearchCondition(String sqlField, String mongoField) {
+            this.sql = sqlField;
+            this.mongo = mongoField;
+        }
+
+        public String getSql() {
+            return this.sql;
+        }
+
+        public String getMongo() {
+            return this.mongo;
+        }
+    }
+
+    private static SearchCondition searchCondition = SearchCondition.ID;
 
     private static DatabaseMode databaseMode = DatabaseMode.None;
-
-    public static DatabaseMode getDatabaseMode() {
-        return databaseMode;
-    }
-
-    public static void setDatabaseMode(DatabaseMode databaseMode) {
-        Main.databaseMode = databaseMode;
-    }
 
     ITRequestJTable itRequestJTable = new ITRequestJTable();
 
@@ -45,7 +62,7 @@ public class Main extends javax.swing.JFrame implements DataListener {
 
         loadTableData();
 
-        //idValidator();
+        SearchableValidator();
 
         EventListener.addListener(this);
     }
@@ -86,6 +103,8 @@ public class Main extends javax.swing.JFrame implements DataListener {
         jSeparator9 = new javax.swing.JSeparator();
         refreshButton = new javax.swing.JButton();
         databaseTypeSelector = new javax.swing.JComboBox<>();
+        jLabel3 = new javax.swing.JLabel();
+        searchConditionCombox = new javax.swing.JComboBox<>();
         MenuBar = new javax.swing.JMenuBar();
         RequestMenu = new javax.swing.JMenu();
 
@@ -182,11 +201,13 @@ public class Main extends javax.swing.JFrame implements DataListener {
 
         searchWarnLable.setFont(new java.awt.Font("Segoe UI", 2, 13)); // NOI18N
         searchWarnLable.setForeground(new java.awt.Color(0, 153, 0));
+        searchWarnLable.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        searchWarnLable.setLabelFor(requestSearchField);
         searchWarnLable.setText("(Enter an ID to look it up)");
         searchWarnLable.setToolTipText("You can press the search button or press Enter on keyboard to search");
 
         requestSearchField.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        requestSearchField.setToolTipText("Enter a request ID to look it up");
+        requestSearchField.setToolTipText("Enter a value to look it up.");
         requestSearchField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 requestSearchFieldActionPerformed(evt);
@@ -240,6 +261,7 @@ public class Main extends javax.swing.JFrame implements DataListener {
             }
         });
 
+        databaseTypeSelector.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         databaseTypeSelector.setModel(new javax.swing.DefaultComboBoxModel<>(DatabaseMode.values()));
         databaseTypeSelector.setSelectedIndex(0);
         databaseTypeSelector.setSelectedItem(databaseMode);
@@ -247,6 +269,21 @@ public class Main extends javax.swing.JFrame implements DataListener {
         databaseTypeSelector.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 databaseTypeSelectorActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 102, 102));
+        jLabel3.setText("Select a Database Mode");
+        jLabel3.setToolTipText("Click on the drop down below to select between MongoDB and MySQL Database server");
+
+        searchConditionCombox.setModel(new javax.swing.DefaultComboBoxModel<>(SearchCondition.values()));
+        searchConditionCombox.setSelectedIndex(0);
+        searchConditionCombox.setSelectedItem(searchCondition);
+        searchConditionCombox.setToolTipText("Select an attribute to search for");
+        searchConditionCombox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchConditionComboxActionPerformed(evt);
             }
         });
 
@@ -278,9 +315,10 @@ public class Main extends javax.swing.JFrame implements DataListener {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(ScrollPanel)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(TableLable)
-                            .addComponent(databaseTypeSelector, 0, 203, Short.MAX_VALUE))
+                            .addComponent(databaseTypeSelector, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(tableOfRequestSeperator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(38, 38, 38)
@@ -288,25 +326,31 @@ public class Main extends javax.swing.JFrame implements DataListener {
                             .addComponent(jLabel2)
                             .addComponent(jLabel1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(addRequestButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jSeparator7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(modifyRequestButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jSeparator8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(deleteRequestButton))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(requestSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(searchButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(searchWarnLable))
-                            .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(addRequestButton)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jSeparator7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(modifyRequestButton)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jSeparator8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(deleteRequestButton))
+                                    .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(searchWarnLable, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(searchConditionCombox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(requestSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(searchButton)))
+                                .addGap(35, 35, 35)))
                         .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
                         .addComponent(refreshButton)))
@@ -318,30 +362,33 @@ public class Main extends javax.swing.JFrame implements DataListener {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(8, 8, 8)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(tableOfRequestSeperator)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel2)
-                                .addComponent(searchButton)
-                                .addComponent(searchWarnLable)
-                                .addComponent(requestSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jSeparator7, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(modifyRequestButton)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel1)
-                                        .addComponent(addRequestButton)))
-                                .addComponent(jSeparator8, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(deleteRequestButton)))
-                        .addComponent(jSeparator9)
-                        .addComponent(refreshButton, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(tableOfRequestSeperator, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(searchButton)
+                            .addComponent(requestSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(searchConditionCombox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(searchWarnLable)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jSeparator7, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(modifyRequestButton)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel1)
+                                    .addComponent(addRequestButton)))
+                            .addComponent(jSeparator8, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(deleteRequestButton)))
+                    .addComponent(jSeparator9, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(refreshButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(databaseTypeSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(TableLable)))
@@ -352,6 +399,22 @@ public class Main extends javax.swing.JFrame implements DataListener {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    public static SearchCondition getSearchCondition() {
+        return searchCondition;
+    }
+
+    public static void setSearchCondition(SearchCondition searchCondition) {
+        Main.searchCondition = searchCondition;
+    }
+
+    public static DatabaseMode getDatabaseMode() {
+        return databaseMode;
+    }
+
+    public static void setDatabaseMode(DatabaseMode databaseMode) {
+        Main.databaseMode = databaseMode;
+    }
 
     private void RequestMenuMenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_RequestMenuMenuSelected
         RequestPopUp.show(RequestMenu, 0, RequestMenu.getHeight());
@@ -384,33 +447,59 @@ public class Main extends javax.swing.JFrame implements DataListener {
     }                                                  
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
+        if (requestSearchField.getText().isEmpty() || requestSearchField.getText().isBlank()) return;
+
         EventListener.inform(new Event(EventType.DataSearchEvent));
     }//GEN-LAST:event_searchButtonActionPerformed
 
     private void requestSearchFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_requestSearchFieldKeyPressed
     }//GEN-LAST:event_requestSearchFieldKeyPressed
 
-    private void idValidator() {
+    private void SearchableValidator() {
         try {
-            int fieldVal = Integer.parseInt(requestSearchField.getText());
-            if (fieldVal >= 0) {
-                if (!searchWarnLable.getText().equals(searchTips)) {
+            if (databaseMode.equals(DatabaseMode.None)) throw new IllegalStateException("Database not selected!");
+
+            if (searchCondition.equals(SearchCondition.ID) && databaseMode.equals(DatabaseMode.MySQL)) {
+                int fieldVal = Integer.parseInt(requestSearchField.getText());
+                if (fieldVal >= 0) {
+                    if (!searchWarnLable.getText().equals(searchTips)) {
+                        searchWarnLable.setForeground(new Color(0,153,0));
+                        searchWarnLable.setText(searchTips);
+                    }
+                    searchButton.setEnabled(true);
+
+                } else {
+                    searchButton.setEnabled(false);
+                    searchWarnLable.setForeground(new Color(255,153,51));
+                    searchWarnLable.setText("Warning: your input of '" + requestSearchField.getText() + "' should be positive integer!" );
+                }
+            } else if (searchCondition.equals(SearchCondition.ID) && databaseMode.equals(DatabaseMode.MongoDB)) {
+                ObjectId fieldVal = new ObjectId(requestSearchField.getText());
+                searchButton.setEnabled(true);
+                searchWarnLable.setForeground(new Color(0,153,0));
+                searchWarnLable.setText(searchTips);
+            } else if (!searchCondition.equals(SearchCondition.ID)) {
+                String fieldVal = requestSearchField.getText();
+                if (fieldVal.isBlank()) {
+                    searchButton.setEnabled(false);
+                    searchWarnLable.setForeground(new Color(255,153,51));
+                    searchWarnLable.setText("Please enter value to search.");
+                } else {
+                    searchButton.setEnabled(true);
                     searchWarnLable.setForeground(new Color(0,153,0));
                     searchWarnLable.setText(searchTips);
                 }
-                searchButton.setEnabled(true);
-
-            } else {
-                searchButton.setEnabled(false);
-                searchWarnLable.setForeground(new Color(255,153,51));
-                searchWarnLable.setText("Warning: your input of '" + requestSearchField.getText() + "' should be positive integer!" );
             }
-        } catch (NumberFormatException e) {
+
+        } catch (IllegalStateException | IllegalArgumentException e) {
             searchButton.setEnabled(false);
-            if (requestSearchField.getText().isBlank()) {
+            if (e instanceof IllegalStateException) {
                 searchWarnLable.setForeground(new Color(255,153,51));
-                searchWarnLable.setText("Warning: you did not entered any ID to search!" );
-            } else {
+                searchWarnLable.setText("Warning: Database Mode is currently set to None" );
+            } else if (requestSearchField.getText().isBlank()) {
+                searchWarnLable.setForeground(new Color(255,153,51));
+                searchWarnLable.setText("Warning: invalid ID format!" );
+            } else if (e instanceof NumberFormatException){
                 searchWarnLable.setForeground(new Color(255,51,51));
                 searchWarnLable.setText("Error: your input of ' " + requestSearchField.getText() + " ' is not an integer!" );
             }
@@ -418,7 +507,7 @@ public class Main extends javax.swing.JFrame implements DataListener {
     }
 
     private void requestSearchFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_requestSearchFieldKeyReleased
-        idValidator();
+        SearchableValidator();
     }//GEN-LAST:event_requestSearchFieldKeyReleased
 
     private void miUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miUpdateActionPerformed
@@ -484,11 +573,16 @@ public class Main extends javax.swing.JFrame implements DataListener {
         EventListener.inform(new Event(EventType.SwitchDatabaseEvent));
     }//GEN-LAST:event_databaseTypeSelectorActionPerformed
 
+    private void searchConditionComboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchConditionComboxActionPerformed
+        searchCondition = (SearchCondition) searchConditionCombox.getSelectedItem();
+        SearchableValidator();
+    }//GEN-LAST:event_searchConditionComboxActionPerformed
+
     private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {
         if (databaseMode == DatabaseMode.None) return;
 
         requestSearchField.setText(null);
-        idValidator();
+        SearchableValidator();
         EventListener.inform(new Event(EventType.DataEvent));
     }                                             
 
@@ -499,11 +593,35 @@ public class Main extends javax.swing.JFrame implements DataListener {
         return itRequests;
     }
 
-    private List<ITRequest> getITRequest(int id) {
-        if (databaseMode == DatabaseMode.None) return List.of();;
+    private List<ITRequest> getITRequest(Object value) {
+        if (databaseMode == DatabaseMode.None) return List.of();
 
-        String condition = "ReqID = ?";
-        List<ITRequest> itRequests = DBConnect.retrieve(ITRequest.class, condition, id);
+        String condition;
+
+        String param = value.toString();
+
+        switch (searchCondition) {
+            case ID -> {
+                if (databaseMode.equals(DatabaseMode.MySQL)) {
+                    condition = searchCondition.getSql() + " = ?";
+                } else {
+                    condition = "{\"" + searchCondition.getMongo() + "\" : ?}";
+
+                }
+            }
+            case Name, Email, Task -> {
+                if (databaseMode.equals(DatabaseMode.MySQL)) {
+                    condition = searchCondition.getSql() + " like ?";
+                    param = "%" + param + "%";
+                } else {
+                    condition = "{\"" + searchCondition.getMongo() + "\" : ?}";
+                    param = "/" + param + "/";
+                }
+            }
+            default -> throw new RuntimeException("Unknown searching condition");
+        }
+
+        List<ITRequest> itRequests = DBConnect.retrieve(ITRequest.class, condition, param);
 
         if (itRequests != null) {
             return itRequests;
@@ -520,10 +638,10 @@ public class Main extends javax.swing.JFrame implements DataListener {
         DisplayTable.setModel(itRequestJTable);
     }
 
-    private void loadTableData(int id) {
+    private void loadTableData(Object value) {
         if (databaseMode == DatabaseMode.None) return;
 
-        List<ITRequest> itRequestList = getITRequest(id);
+        List<ITRequest> itRequestList = getITRequest(value);
         itRequestJTable.updateData(itRequestList);
         DisplayTable.setModel(itRequestJTable);
     }
@@ -535,9 +653,9 @@ public class Main extends javax.swing.JFrame implements DataListener {
                 System.out.println("A data event triggered. Updating data...");
             }
             case DataSearchEvent -> {
-                int id = Integer.parseInt(requestSearchField.getText());
-                loadTableData(id);
-                System.out.println("A search event for ID: " + id + " triggered. Updating data...");
+                Object searchValue = requestSearchField.getText();
+                loadTableData(searchValue);
+                System.out.println("A search event for value: '" + searchValue + "' triggered. Updating data...");
             }
             case SwitchDatabaseEvent -> {
                 if (databaseMode == DatabaseMode.MySQL) {
@@ -545,6 +663,7 @@ public class Main extends javax.swing.JFrame implements DataListener {
                 } else if (databaseMode == DatabaseMode.MongoDB) {
                     DBConnect.initializeMongo("VBoxData");
                 }
+                loadTableData();
             }
             default -> System.out.println("An unknown event happened. Type: " + event.type);
         }
@@ -583,6 +702,7 @@ public class Main extends javax.swing.JFrame implements DataListener {
     private javax.swing.JButton deleteRequestButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
@@ -599,6 +719,7 @@ public class Main extends javax.swing.JFrame implements DataListener {
     private javax.swing.JButton refreshButton;
     private javax.swing.JTextField requestSearchField;
     private javax.swing.JButton searchButton;
+    private javax.swing.JComboBox<SearchCondition> searchConditionCombox;
     private javax.swing.JLabel searchWarnLable;
     private javax.swing.JSeparator tableOfRequestSeperator;
     // End of variables declaration//GEN-END:variables
