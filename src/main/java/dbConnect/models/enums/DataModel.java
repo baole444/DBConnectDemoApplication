@@ -12,6 +12,13 @@ package dbConnect.models.enums;
  */
 @Deprecated
 public enum DataModel {
-    ITRequestModel,
+    Supplier,
+    Merchandise,
+    MerchandiseCategory,
+    Customer,
+    ImportBill,
+    RetailBill,
+    ImportBillItems,
+    RetailBillItems,
     GenericModel
 }

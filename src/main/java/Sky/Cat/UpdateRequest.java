@@ -6,7 +6,9 @@ import Sky.Listener.Event;
 import Sky.Listener.EventListener;
 import Sky.Listener.EventType;
 import dbConnect.DBConnect;
+import dbConnect.Utility;
 import dbConnect.models.ITRequest;
+import org.bson.types.ObjectId;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,6 +20,7 @@ import java.util.List;
 
 public class UpdateRequest extends javax.swing.JFrame {
     DateSpinnerDataModel dateSpinnerDataModel = new DateSpinnerDataModel();
+
     public UpdateRequest() {
         initComponents();
         getContentPane().setBackground(new Color(165,196,221));
@@ -26,6 +29,16 @@ public class UpdateRequest extends javax.swing.JFrame {
     }
 
     public UpdateRequest(int id) {
+        initComponents();
+
+        getContentPane().setBackground(new Color(165,196,221));
+
+        loadDateSelector();
+
+        fillComboBox(id);
+    }
+
+    public UpdateRequest(ObjectId id) {
         initComponents();
 
         getContentPane().setBackground(new Color(165,196,221));
@@ -249,15 +262,12 @@ public class UpdateRequest extends javax.swing.JFrame {
 
         if (itRequest != null) {
             try {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-                String reqDate =String.valueOf(itRequest.getReqDate());
-
-                Date date = dateFormat.parse(reqDate);
+                Date date = itRequest.getReqDate();
 
                 dateSpinnerDataModel.setValue(date);
-            } catch (ParseException e) {
+            } catch (Exception e) {
                 System.out.println("I messed up the data, skipping date parsing");
+                e.printStackTrace();
             }
 
             requestDateField.setText(String.valueOf(itRequest.getReqDate()));
@@ -313,6 +323,19 @@ public class UpdateRequest extends javax.swing.JFrame {
         }
     }
 
+    private void fillComboBox(ObjectId id) {
+        try {
+            String condition = "{\"_id\" : ?}";
+            List<ITRequest> itRequestList = DBConnect.retrieve(ITRequest.class, condition, id);
+            for (ITRequest itRequest : itRequestList) {
+                requestIdCombox.addItem(itRequest);
+            }
+        } catch (Exception e) {
+            System.out.println("There was issue loading combo box\'s content");
+            e.printStackTrace();
+        }
+    }
+
     private void updateScreen() {
         requestIdCombox.removeAllItems();
         fillComboBox();
@@ -336,17 +359,43 @@ public class UpdateRequest extends javax.swing.JFrame {
         }
     }
 
+    private void updateToDataBase(ObjectId id, String name, String email, java.util.Date date, String type, String detail)  {
+        ITRequest itRequest = new ITRequest(name, date, email, type, detail);
+
+        String condition = "{\"_id\" : ?}";
+
+        boolean success = DBConnect.update(itRequest, condition, id);
+        if (success) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Request updated in database!", "Successes", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            updateScreen();
+            clearFormFields();
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Cannot update request", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     private void updateRequest() {
         try {
-            ITRequest it = (ITRequest) requestIdCombox.getSelectedItem();
-            int id = it.getReqID();
-            String name = requestNameField.getText();
-            String type = requestTypeField.getText();
-            String detail = requestDetailField.getText();
-            String email = requestEmailField.getText();
-            java.sql.Date date = java.sql.Date.valueOf(requestDateField.getText());
+            if (Main.getDatabaseMode() == Main.DatabaseMode.MySQL) {
+                ITRequest it = (ITRequest) requestIdCombox.getSelectedItem();
+                int id = it.getReqID();
+                String name = requestNameField.getText();
+                String type = requestTypeField.getText();
+                String detail = requestDetailField.getText();
+                String email = requestEmailField.getText();
+                java.sql.Date date = java.sql.Date.valueOf(requestDateField.getText());
 
-            updateToDataBase(id, name, email, date, type, detail);
+                updateToDataBase(id, name, email, date, type, detail);
+            } else if (Main.getDatabaseMode() == Main.DatabaseMode.MongoDB) {
+                ITRequest it = (ITRequest) requestIdCombox.getSelectedItem();
+                ObjectId id = it.get_id();
+                String name = requestNameField.getText();
+                String type = requestTypeField.getText();
+                String detail = requestDetailField.getText();
+                String email = requestEmailField.getText();
+                java.util.Date date = new Date(dateSpinnerDataModel.getDate().getTime());
+                updateToDataBase(id, name, email, date, type, detail);
+            }
 
         } catch (Exception e) {
             javax.swing.JOptionPane.showMessageDialog(this, "Cannot update request. Problem founded: \n >" + e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);

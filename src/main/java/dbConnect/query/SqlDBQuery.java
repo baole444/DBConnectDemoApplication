@@ -1,4 +1,8 @@
-package dbConnect;
+package dbConnect.query;
+
+import dbConnect.mapper.MongoMapper;
+import dbConnect.mapper.SQLMapper;
+import org.bson.Document;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -9,30 +13,30 @@ import java.util.List;
  * Database query class.<br>
  * Constructor:
  * <ul>
- *      <li>{@link #DBQuery(String, String, String)} initialize DBQuery</li>
+ *      <li>{@link #SqlDBQuery(String, String, String)} initialize DBQuery</li>
  * </ul>
  * </div>
  * <div>
  * This class contains:
  * <ul>
- *      <li>{@link #loadData(String, DBMapper, Object...)} fetching data from database server.</li>
- *      <li>{@link #setData(String, Object...)} insert or modify data from database server.</li>
+ *      <li>{@link #loadSQLData(String, SQLMapper, Object...)} fetching data from database server.</li>
+ *      <li>{@link #setDataSQL(String, Object...)} insert or modify data from database server.</li>
  * </ul>
  * </div>
  */
 
-public class DBQuery {
-    private String dbUrl;
-    private String user;
-    private String password;
+public class SqlDBQuery implements DBInterface {
+    private final String dbUrl;
+    private final String user;
+    private final String password;
 
     /**
-     * Constructor of {@link DBQuery}.
+     * Constructor of {@link SqlDBQuery}.
      * @param dbUrl link to the database server.
      * @param user username of the account.
      * @param password account's password.
      */
-    public DBQuery(String dbUrl, String user, String password) {
+    public SqlDBQuery(String dbUrl, String user, String password) {
         this.dbUrl = dbUrl;
         this.user = user;
         this.password = password;
@@ -47,7 +51,8 @@ public class DBQuery {
      * @param <T> Object
      * @throws SQLException when there is an error occurred during execution.
      */
-    public <T> List<T> loadData(String query, DBMapper<T> model, Object... params) throws SQLException {
+    @Override
+    public <T> List<T> loadSQLData(String query, SQLMapper<T> model, Object... params) throws SQLException {
         List<T> rows = new ArrayList<>();
 
         try (Connection conn = DriverManager.getConnection(dbUrl, user, password);
@@ -75,7 +80,8 @@ public class DBQuery {
      * @return count of successful execution.
      * @throws SQLException when there is an error occurred during execution.
      */
-    public int setData(String query, Object... params) throws SQLException{
+    @Override
+    public int setDataSQL(String query, Object... params) throws SQLException{
         try (Connection conn = DriverManager.getConnection(dbUrl, user, password);
              PreparedStatement preparedStatement = conn.prepareStatement(query);) {
 
@@ -90,4 +96,15 @@ public class DBQuery {
             throw e;
         }
     }
+
+    @Override
+    public MongoDBQuery setMongoData(String collectionName) {
+        throw new UnsupportedOperationException("MongoDB operation not allowed in SQL queries.");
+    }
+
+    @Override
+    public <T> List<T> loadMongoData(String collectionName, Document filter, Document projection, MongoMapper<T> model) {
+        throw new UnsupportedOperationException("MongoDB operation not allowed in SQL queries.");
+    }
+
 }

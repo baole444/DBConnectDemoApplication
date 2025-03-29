@@ -9,13 +9,31 @@ import Sky.Listener.EventType;
 import Sky.Table.ITRequestJTable;
 import dbConnect.DBConnect;
 import dbConnect.models.ITRequest;
+import org.bson.types.ObjectId;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
 public class Main extends javax.swing.JFrame implements DataListener {
+    public enum DatabaseMode {
+        None,
+        MySQL,
+        MongoDB;
+    }
+
+    private static DatabaseMode databaseMode = DatabaseMode.None;
+
+    public static DatabaseMode getDatabaseMode() {
+        return databaseMode;
+    }
+
+    public static void setDatabaseMode(DatabaseMode databaseMode) {
+        Main.databaseMode = databaseMode;
+    }
+
     ITRequestJTable itRequestJTable = new ITRequestJTable();
+
     private final String searchTips = "(Press search button or press Enter on keyboard to start searching)";
 
     public Main() {
@@ -27,7 +45,7 @@ public class Main extends javax.swing.JFrame implements DataListener {
 
         loadTableData();
 
-        idValidator();
+        //idValidator();
 
         EventListener.addListener(this);
     }
@@ -67,6 +85,7 @@ public class Main extends javax.swing.JFrame implements DataListener {
         deleteRequestButton = new javax.swing.JButton();
         jSeparator9 = new javax.swing.JSeparator();
         refreshButton = new javax.swing.JButton();
+        databaseTypeSelector = new javax.swing.JComboBox<>();
         MenuBar = new javax.swing.JMenuBar();
         RequestMenu = new javax.swing.JMenu();
 
@@ -114,6 +133,8 @@ public class Main extends javax.swing.JFrame implements DataListener {
         setBackground(new java.awt.Color(165, 196, 221));
         setForeground(new java.awt.Color(108, 155, 125));
         setLocationByPlatform(true);
+        setMinimumSize(new java.awt.Dimension(1080, 720));
+        setName("mainFrame"); // NOI18N
         addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 formMouseClicked(evt);
@@ -219,6 +240,16 @@ public class Main extends javax.swing.JFrame implements DataListener {
             }
         });
 
+        databaseTypeSelector.setModel(new javax.swing.DefaultComboBoxModel<>(DatabaseMode.values()));
+        databaseTypeSelector.setSelectedIndex(0);
+        databaseTypeSelector.setSelectedItem(databaseMode);
+        databaseTypeSelector.setToolTipText("Select A Database to load data from");
+        databaseTypeSelector.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                databaseTypeSelectorActionPerformed(evt);
+            }
+        });
+
         MenuBar.setFont(new java.awt.Font("Consolas", 1, 14)); // NOI18N
 
         RequestMenu.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -247,8 +278,10 @@ public class Main extends javax.swing.JFrame implements DataListener {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(ScrollPanel)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(TableLable)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(TableLable)
+                            .addComponent(databaseTypeSelector, 0, 203, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(tableOfRequestSeperator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(38, 38, 38)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -275,9 +308,8 @@ public class Main extends javax.swing.JFrame implements DataListener {
                             .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(refreshButton)
-                        .addGap(0, 8, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                        .addComponent(refreshButton)))
                 .addContainerGap())
             .addComponent(jSeparator5, javax.swing.GroupLayout.Alignment.TRAILING)
         );
@@ -285,10 +317,9 @@ public class Main extends javax.swing.JFrame implements DataListener {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGap(8, 8, 8)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(TableLable, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(tableOfRequestSeperator)
                         .addGroup(layout.createSequentialGroup()
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -300,18 +331,23 @@ public class Main extends javax.swing.JFrame implements DataListener {
                             .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel1)
-                                    .addComponent(addRequestButton)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jSeparator7, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(modifyRequestButton))
+                                    .addComponent(modifyRequestButton)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel1)
+                                        .addComponent(addRequestButton)))
                                 .addComponent(jSeparator8, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(deleteRequestButton))))
-                    .addComponent(jSeparator9)
-                    .addComponent(refreshButton, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE))
+                                .addComponent(deleteRequestButton)))
+                        .addComponent(jSeparator9)
+                        .addComponent(refreshButton, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(databaseTypeSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(TableLable)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 401, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(78, Short.MAX_VALUE))
+                .addGap(76, 76, 76))
         );
 
         pack();
@@ -328,11 +364,15 @@ public class Main extends javax.swing.JFrame implements DataListener {
     }//GEN-LAST:event_formMouseClicked
 
     private void miAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miAddActionPerformed
+        if (databaseMode == DatabaseMode.None) return;
+
         AddRequest addRequest = new AddRequest();
         addRequest.setVisible(true);
     }//GEN-LAST:event_miAddActionPerformed
 
     private void miDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miDeleteActionPerformed
+        if (databaseMode == DatabaseMode.None) return;
+
         DeleteRequest deleteRequest = new DeleteRequest();
         deleteRequest.setVisible(true);
     }//GEN-LAST:event_miDeleteActionPerformed
@@ -382,29 +422,46 @@ public class Main extends javax.swing.JFrame implements DataListener {
     }//GEN-LAST:event_requestSearchFieldKeyReleased
 
     private void miUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miUpdateActionPerformed
+        if (databaseMode == DatabaseMode.None) return;
+
         UpdateRequest updateRequest = new UpdateRequest();
         updateRequest.setVisible(true);
     }//GEN-LAST:event_miUpdateActionPerformed
 
     private void modifyRequestButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modifyRequestButtonActionPerformed
+        if (databaseMode == DatabaseMode.None) return;
+
         int row = DisplayTable.getSelectedRow();
 
         if (row != -1) {
             ITRequest itRequest = ((ITRequestJTable) DisplayTable.getModel()).getRequestAt(row);
 
-            int target = itRequest.getReqID();
+            UpdateRequest updateRequest;
 
-            UpdateRequest updateRequest = new UpdateRequest(target);
+            if (databaseMode == DatabaseMode.MySQL) {
+                int target = itRequest.getReqID();
+                updateRequest = new UpdateRequest(target);
+            } else if (databaseMode == DatabaseMode.MongoDB) {
+                ObjectId target = itRequest.get_id();
+                updateRequest = new UpdateRequest(target);
+            } else {
+                updateRequest = new UpdateRequest();
+            }
+
             updateRequest.setVisible(true);
         }
     }//GEN-LAST:event_modifyRequestButtonActionPerformed
 
     private void addRequestButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRequestButtonActionPerformed
+        if (databaseMode == DatabaseMode.None) return;
+
         AddRequest addRequest = new AddRequest();
         addRequest.setVisible(true);
     }//GEN-LAST:event_addRequestButtonActionPerformed
 
     private void deleteRequestButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteRequestButtonActionPerformed
+        if (databaseMode == DatabaseMode.None) return;
+
         int row = DisplayTable.getSelectedRow();
 
         if (row != -1) {
@@ -421,18 +478,30 @@ public class Main extends javax.swing.JFrame implements DataListener {
         }
     }//GEN-LAST:event_deleteRequestButtonActionPerformed
 
+    private void databaseTypeSelectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_databaseTypeSelectorActionPerformed
+        databaseMode = (DatabaseMode) databaseTypeSelector.getSelectedItem();
+
+        EventListener.inform(new Event(EventType.SwitchDatabaseEvent));
+    }//GEN-LAST:event_databaseTypeSelectorActionPerformed
+
     private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        if (databaseMode == DatabaseMode.None) return;
+
         requestSearchField.setText(null);
         idValidator();
         EventListener.inform(new Event(EventType.DataEvent));
-    }//GEN-LAST:event_refreshButtonActionPerformed
+    }                                             
 
     private List<ITRequest> getITRequest() {
+        if (databaseMode == DatabaseMode.None) return List.of();;
+
         List<ITRequest> itRequests = DBConnect.retrieveAll(ITRequest.class);
         return itRequests;
     }
 
     private List<ITRequest> getITRequest(int id) {
+        if (databaseMode == DatabaseMode.None) return List.of();;
+
         String condition = "ReqID = ?";
         List<ITRequest> itRequests = DBConnect.retrieve(ITRequest.class, condition, id);
 
@@ -444,12 +513,16 @@ public class Main extends javax.swing.JFrame implements DataListener {
     }
 
     private void loadTableData() {
+        if (databaseMode == DatabaseMode.None) return;
+
         List<ITRequest> itRequestList = getITRequest();
         itRequestJTable.updateData(itRequestList);
         DisplayTable.setModel(itRequestJTable);
     }
 
     private void loadTableData(int id) {
+        if (databaseMode == DatabaseMode.None) return;
+
         List<ITRequest> itRequestList = getITRequest(id);
         itRequestJTable.updateData(itRequestList);
         DisplayTable.setModel(itRequestJTable);
@@ -457,14 +530,23 @@ public class Main extends javax.swing.JFrame implements DataListener {
     @Override
     public void onUpdated(Event event) {
         switch (event.type) {
-            case DataEvent: loadTableData(); System.out.println("A data event triggered. Updating data..."); break;
-            case DataSearchEvent:
+            case DataEvent -> {
+                loadTableData();
+                System.out.println("A data event triggered. Updating data...");
+            }
+            case DataSearchEvent -> {
                 int id = Integer.parseInt(requestSearchField.getText());
                 loadTableData(id);
                 System.out.println("A search event for ID: " + id + " triggered. Updating data...");
-                break;
-            default:
-                System.out.println("An unknown event happened. Type: " + event.type);
+            }
+            case SwitchDatabaseEvent -> {
+                if (databaseMode == DatabaseMode.MySQL) {
+                    DBConnect.initializeSQL("VBoxData");
+                } else if (databaseMode == DatabaseMode.MongoDB) {
+                    DBConnect.initializeMongo("VBoxData");
+                }
+            }
+            default -> System.out.println("An unknown event happened. Type: " + event.type);
         }
 
     }
@@ -481,7 +563,6 @@ public class Main extends javax.swing.JFrame implements DataListener {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        DBConnect.initialize("VBoxData");
         
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -498,6 +579,7 @@ public class Main extends javax.swing.JFrame implements DataListener {
     private javax.swing.JScrollPane ScrollPanel;
     private javax.swing.JLabel TableLable;
     private javax.swing.JButton addRequestButton;
+    private javax.swing.JComboBox<DatabaseMode> databaseTypeSelector;
     private javax.swing.JButton deleteRequestButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

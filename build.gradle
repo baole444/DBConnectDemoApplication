@@ -7,7 +7,7 @@ sourceCompatibility = '21'
 targetCompatibility = '21'
 
 group = 'Sky.Cat'
-version = '1.0-SNAPSHOT'
+version = '1.1-SNAPSHOT'
 
 repositories {
     flatDir {
@@ -18,6 +18,9 @@ repositories {
 
 dependencies {
     implementation fileTree('Lib') { include '*.jar' }
+    implementation("org.mongodb:mongodb-driver-sync:5.3.1")
+    implementation("org.mongodb:bson:5.3.1")
+    implementation("com.google.code.gson:gson:2.12.1")
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }

@@ -11,10 +11,12 @@ import Sky.Listener.EventListener;
 import Sky.Listener.EventType;
 import dbConnect.DBConnect;
 import dbConnect.models.ITRequest;
+import dbConnect.models.constrain.MaxLength;
 
 import javax.swing.*;
 import javax.swing.text.DateFormatter;
 import java.awt.*;
+import java.lang.annotation.Annotation;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,6 +30,7 @@ public class AddRequest extends javax.swing.JFrame {
         getContentPane().setBackground(new Color(165,196,221));
 
         loadDateSelector();
+
     }
 
     /**
@@ -58,6 +61,11 @@ public class AddRequest extends javax.swing.JFrame {
         DateSpinner = new javax.swing.JSpinner();
         requestDateField = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
+        nameWarnLable = new javax.swing.JLabel();
+        emailWarnLable = new javax.swing.JLabel();
+        dayWarnLabel = new javax.swing.JLabel();
+        wordCountDetail = new javax.swing.JLabel();
+        detailWarnLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Add Request");
@@ -85,6 +93,18 @@ public class AddRequest extends javax.swing.JFrame {
 
         jLabel2.setText("Day of request");
 
+        requestNameField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                requestNameFieldKeyReleased(evt);
+            }
+        });
+
+        requestEmailField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                requestEmailFieldKeyReleased(evt);
+            }
+        });
+
         jLabel4.setText("Requester's Email");
 
         requestTypeCombox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Machine service", "Update sofware", "General tech support" }));
@@ -102,6 +122,11 @@ public class AddRequest extends javax.swing.JFrame {
                 requestTypeFieldActionPerformed(evt);
             }
         });
+        requestTypeField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                requestTypeFieldKeyReleased(evt);
+            }
+        });
 
         jLabel6.setText("Default task");
 
@@ -110,6 +135,11 @@ public class AddRequest extends javax.swing.JFrame {
         requestDetailField.setColumns(20);
         requestDetailField.setLineWrap(true);
         requestDetailField.setRows(3);
+        requestDetailField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                requestDetailFieldKeyReleased(evt);
+            }
+        });
         jScrollPane1.setViewportView(requestDetailField);
 
         clearInfoButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -136,6 +166,19 @@ public class AddRequest extends javax.swing.JFrame {
 
         jLabel3.setText("Date");
 
+        nameWarnLable.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+        nameWarnLable.setText("Checking name...");
+
+        emailWarnLable.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+        emailWarnLable.setText("Checking email...");
+
+        dayWarnLabel.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+        dayWarnLabel.setText("Checking date...");
+
+        wordCountDetail.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+        wordCountDetail.setForeground(new java.awt.Color(0, 153, 0));
+        wordCountDetail.setText("(0/255)");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -143,46 +186,60 @@ public class AddRequest extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel7))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 72, Short.MAX_VALUE)
-                        .addComponent(addRequestButton)
-                        .addGap(18, 18, 18)
-                        .addComponent(clearInfoButton)
-                        .addGap(18, 18, 18)
-                        .addComponent(cancelButton)
-                        .addGap(89, 89, 89))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(requestNameField)
-                            .addComponent(requestEmailField, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(nameWarnLable)
+                            .addComponent(dayWarnLabel))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel7)
+                            .addComponent(emailWarnLable))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(requestTypeCombox, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(6, 6, 6)
+                                .addComponent(detailWarnLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(wordCountDetail)
+                                .addContainerGap())
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(addRequestButton)
                                 .addGap(18, 18, 18)
-                                .addComponent(jLabel5)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(clearInfoButton)
+                                .addGap(18, 18, 18)
+                                .addComponent(cancelButton)
+                                .addGap(26, 26, 26))
+                            .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(requestNameField)
+                                    .addComponent(requestEmailField, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel8)
-                                        .addGap(0, 0, Short.MAX_VALUE))
-                                    .addComponent(requestTypeField))))
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1)
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(DateSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30)
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(requestDateField)
-                        .addContainerGap())))
+                                        .addComponent(requestTypeCombox, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jLabel5)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel8)
+                                                .addGap(0, 170, Short.MAX_VALUE))
+                                            .addComponent(requestTypeField))))
+                                .addContainerGap())
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane1)
+                                .addContainerGap())
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(DateSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(30, 30, 30)
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(requestDateField)
+                                .addContainerGap())))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -211,16 +268,27 @@ public class AddRequest extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel8)
                 .addGap(30, 30, 30)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(wordCountDetail)
+                            .addComponent(detailWarnLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(addRequestButton)
                             .addComponent(cancelButton)
                             .addComponent(clearInfoButton)))
-                    .addComponent(jLabel7))
-                .addContainerGap(48, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addGap(79, 79, 79)
+                        .addComponent(nameWarnLable)
+                        .addGap(14, 14, 14)
+                        .addComponent(emailWarnLable)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(dayWarnLabel)
+                .addContainerGap(33, Short.MAX_VALUE))
         );
 
         pack();
@@ -259,7 +327,24 @@ public class AddRequest extends javax.swing.JFrame {
             String format = dateFormat.format(date);
             requestDateField.setText(format);
         }
+        dateValidator();
     }//GEN-LAST:event_DateSpinnerStateChanged
+
+    private void requestNameFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_requestNameFieldKeyReleased
+        nameValidator();
+    }//GEN-LAST:event_requestNameFieldKeyReleased
+
+    private void requestEmailFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_requestEmailFieldKeyReleased
+        emailValidator();
+    }//GEN-LAST:event_requestEmailFieldKeyReleased
+
+    private void requestDetailFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_requestDetailFieldKeyReleased
+        detailValidator();
+    }//GEN-LAST:event_requestDetailFieldKeyReleased
+
+    private void requestTypeFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_requestTypeFieldKeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_requestTypeFieldKeyReleased
 
     private void clearFormFields() {
         requestTypeField.setText(null);
@@ -302,6 +387,88 @@ public class AddRequest extends javax.swing.JFrame {
         }
     }
 
+    private void nameValidator() {
+            String name = requestNameField.getText();
+            if (name != null ) {
+                if (name.isBlank()) {
+                    nameWarnLable.setForeground(new Color(255,153,51));
+                    nameWarnLable.setText("Warning: The name is blank!" );
+                    addRequestButton.setEnabled(false);
+                } else if (name.length() > 255) {
+                    nameWarnLable.setForeground(new Color(255,153,51));
+                    nameWarnLable.setText("Warning: name's length exceeded limit and will be trimmed! (" + name.length() + "/255" );
+                    addRequestButton.setEnabled(true);
+                } else {
+                    nameWarnLable.setForeground(new Color(0,153,0));
+                    nameWarnLable.setText("Name checked");
+                    addRequestButton.setEnabled(true);
+                }
+            } else {
+                nameWarnLable.setForeground(new Color(255,51,51));
+                nameWarnLable.setText("Error: name field not allowed to be empty" );
+                addRequestButton.setEnabled(false);
+            }
+    }
+
+    private void dateValidator() {
+        String name = requestDateField.getText();
+        if (name != null ) {
+            if (name.isBlank()) {
+                dayWarnLabel.setForeground(new Color(255,153,51));
+                dayWarnLabel.setText("Warning: The date is blank!" );
+                addRequestButton.setEnabled(false);
+            } else {
+                dayWarnLabel.setForeground(new Color(0,153,0));
+                dayWarnLabel.setText("Date checked");
+                addRequestButton.setEnabled(true);
+            }
+        } else {
+            dayWarnLabel.setForeground(new Color(255,51,51));
+            dayWarnLabel.setText("Error: Please select a day!" );
+            addRequestButton.setEnabled(false);
+        }
+    }
+
+    private void emailValidator() {
+        String email = requestEmailField.getText();
+        if (email != null ) {
+            if (email.isBlank()) {
+                emailWarnLable.setForeground(new Color(255,153,51));
+                emailWarnLable.setText("Warning: The email is blank!" );
+                addRequestButton.setEnabled(false);
+            } else if (email.length() > 255) {
+                emailWarnLable.setForeground(new Color(255,153,51));
+                emailWarnLable.setText("Warning: email's length exceeded limit and will be trimmed! (" + email.length() + "/255" );
+                addRequestButton.setEnabled(true);
+            } else {
+                emailWarnLable.setForeground(new Color(0,153,0));
+                emailWarnLable.setText("Email checked");
+                addRequestButton.setEnabled(true);
+            }
+        } else {
+            emailWarnLable.setForeground(new Color(255,51,51));
+            emailWarnLable.setText("Error: email field not allowed to be empty" );
+            addRequestButton.setEnabled(false);
+        }
+    }
+
+    private void detailValidator() {
+        String details = requestDetailField.getText();
+        if (details != null ) {
+            if (details.length() > 255) {
+                detailWarnLabel.setForeground(new Color(255,153,51));
+                wordCountDetail.setForeground(new Color(255,153,51));
+                detailWarnLabel.setText("Warning: details length exceeded limit and will be trimmed!");
+                wordCountDetail.setText("(" + details.length() + "/255)");
+            } else {
+                detailWarnLabel.setForeground(new Color(0,153,0));
+                wordCountDetail.setText("(" + details.length() + "/255)");
+            }
+        }
+    }
+
+
+
     public static void main(String args[]) {
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
@@ -327,6 +494,9 @@ public class AddRequest extends javax.swing.JFrame {
     private javax.swing.JButton addRequestButton;
     private javax.swing.JButton cancelButton;
     private javax.swing.JButton clearInfoButton;
+    private javax.swing.JLabel dayWarnLabel;
+    private javax.swing.JLabel detailWarnLabel;
+    private javax.swing.JLabel emailWarnLable;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -336,11 +506,13 @@ public class AddRequest extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel nameWarnLable;
     private javax.swing.JTextField requestDateField;
     private javax.swing.JTextArea requestDetailField;
     private javax.swing.JTextField requestEmailField;
     private javax.swing.JTextField requestNameField;
     private javax.swing.JComboBox<String> requestTypeCombox;
     private javax.swing.JTextField requestTypeField;
+    private javax.swing.JLabel wordCountDetail;
     // End of variables declaration//GEN-END:variables
 }

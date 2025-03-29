@@ -1,5 +1,6 @@
 package Sky.Table;
 
+import Sky.Cat.Main;
 import dbConnect.models.ITRequest;
 
 import javax.swing.table.AbstractTableModel;
@@ -39,13 +40,30 @@ public class ITRequestJTable extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         ITRequest itRequest = itRequestList.get(rowIndex);
         switch (columnIndex) {
-            case 0: return itRequest.getReqID();
-            case 1: return itRequest.getReqName();
-            case 2: return itRequest.getReqDate();
-            case 3: return itRequest.getReqEmail();
-            case 4: return itRequest.getReqType();
-            case 5: return itRequest.getReqDetails();
-            default: return null;
+            case 0 -> {
+                if (Main.getDatabaseMode() == Main.DatabaseMode.MongoDB) {
+                    return itRequest.get_id().toString();
+                } else if (Main.getDatabaseMode() == Main.DatabaseMode.MySQL) {
+                    return itRequest.getReqID();
+                }
+                else return null;
+            }
+            case 1 -> {
+                return itRequest.getReqName();
+            }
+            case 2 -> {
+                return itRequest.getReqDate();
+            }
+            case 3 -> {
+                return itRequest.getReqEmail();
+            }
+            case 4 -> {
+                return itRequest.getReqType();
+            }
+            case 5 -> {
+                return itRequest.getReqDetails();
+            }
+            default -> {return null;}
         }
     }
 
