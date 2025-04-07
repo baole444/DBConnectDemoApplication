@@ -103,8 +103,7 @@ public class AddRequest extends javax.swing.JFrame {
 
         jLabel4.setText("Requester's Email");
 
-        requestTypeCombox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Machine service", "Update sofware", "General tech support" }));
-        requestTypeCombox.setSelectedIndex(-1);
+        requestTypeCombox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Machine service", "Update software", "System checkup", "General tech support" }));
         requestTypeCombox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 requestTypeComboxActionPerformed(evt);
@@ -375,7 +374,7 @@ public class AddRequest extends javax.swing.JFrame {
             String name = requestNameField.getText();
             if (name.isEmpty()) {
                 nameWarnLable.setForeground(new Color(255,51,51));
-                nameWarnLable.setText("Error: name field not allowed to be empty" );
+                nameWarnLable.setText("Error: name field can't be empty" );
                 addRequestButton.setEnabled(false);
             } else if (name.isBlank()) {
                 nameWarnLable.setForeground(new Color(255,153,51));
@@ -413,7 +412,7 @@ public class AddRequest extends javax.swing.JFrame {
         String email = requestEmailField.getText();
         if (email.isEmpty()) {
             emailWarnLable.setForeground(new Color(255,51,51));
-            emailWarnLable.setText("Error: email field not allowed to be empty" );
+            emailWarnLable.setText("Error: email field can't be empty" );
             addRequestButton.setEnabled(false);
         } else if (email.isBlank()) {
             emailWarnLable.setForeground(new Color(255,153,51));
@@ -443,16 +442,11 @@ public class AddRequest extends javax.swing.JFrame {
         }
     }
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AddRequest.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AddRequest.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AddRequest.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
+                 UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(AddRequest.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 

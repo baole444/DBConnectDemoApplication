@@ -496,12 +496,12 @@ public class Main extends javax.swing.JFrame implements DataListener {
             if (e instanceof IllegalStateException) {
                 searchWarnLable.setForeground(new Color(255,153,51));
                 searchWarnLable.setText("Warning: Database Mode is currently set to None" );
-            } else if (requestSearchField.getText().isBlank()) {
-                searchWarnLable.setForeground(new Color(255,153,51));
-                searchWarnLable.setText("Warning: invalid ID format!" );
             } else if (e instanceof NumberFormatException){
                 searchWarnLable.setForeground(new Color(255,51,51));
-                searchWarnLable.setText("Error: your input of ' " + requestSearchField.getText() + " ' is not an integer!" );
+                searchWarnLable.setText("Error: your input of '" + requestSearchField.getText() + "' is not an integer!" );
+            } else {
+                searchWarnLable.setForeground(new Color(255,153,51));
+                searchWarnLable.setText("Warning: invalid ID format!");
             }
         }
     }
@@ -598,30 +598,28 @@ public class Main extends javax.swing.JFrame implements DataListener {
 
         String condition;
 
-        String param = value.toString();
-
         switch (searchCondition) {
             case ID -> {
                 if (databaseMode.equals(DatabaseMode.MySQL)) {
                     condition = searchCondition.getSql() + " = ?";
                 } else {
                     condition = "{\"" + searchCondition.getMongo() + "\" : ?}";
-
+                    value = new ObjectId(value.toString());
                 }
             }
             case Name, Email, Task -> {
                 if (databaseMode.equals(DatabaseMode.MySQL)) {
                     condition = searchCondition.getSql() + " like ?";
-                    param = "%" + param + "%";
+                    value = "%" + value.toString() + "%";
                 } else {
                     condition = "{\"" + searchCondition.getMongo() + "\" : ?}";
-                    param = "/" + param + "/";
+                    value = "/" + value.toString() + "/";
                 }
             }
             default -> throw new RuntimeException("Unknown searching condition");
         }
 
-        List<ITRequest> itRequests = DBConnect.retrieve(ITRequest.class, condition, param);
+        List<ITRequest> itRequests = DBConnect.retrieve(ITRequest.class, condition, value);
 
         if (itRequests != null) {
             return itRequests;
@@ -664,25 +662,21 @@ public class Main extends javax.swing.JFrame implements DataListener {
                     DBConnect.initializeMongo("VBoxData");
                 }
                 loadTableData();
+                SearchableValidator();
             }
             default -> System.out.println("An unknown event happened. Type: " + event.type);
         }
 
     }
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
+                 UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        
+
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Main().setVisible(true);
