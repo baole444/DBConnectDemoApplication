@@ -1,4 +1,4 @@
-package dbConnect.models;
+package Sky.Cat;
 
 import com.mongodb.MongoException;
 import dbConnect.DataModel;
@@ -8,8 +8,8 @@ import dbConnect.models.autogen.AutomaticField;
 import dbConnect.models.autogen.PrimaryField;
 import dbConnect.models.constrain.MaxLength;
 import dbConnect.models.constrain.MongoOnly;
-import dbConnect.models.enums.Collection;
-import dbConnect.models.enums.Table;
+import dbConnect.models.meta.CollectionName;
+import dbConnect.models.meta.TableName;
 import dbConnect.models.notnull.NotNullField;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -17,6 +17,8 @@ import org.bson.types.ObjectId;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@TableName("ITRequest")
+@CollectionName("requests")
 public class ITRequest extends DataModel<ITRequest> {
     @AutomaticField @PrimaryField
     private int ReqID;
@@ -151,16 +153,6 @@ public class ITRequest extends DataModel<ITRequest> {
     }
 
     @Override
-    public Table getTable() {
-        return Table.ITRequest;
-    }
-
-    @Override
-    public Collection getCollection() {
-        return Collection.ITRequest;
-    }
-
-    @Override
     public ResultSetInterface<ITRequest> getTableMap() {
         return new ITRequestSQLMap();
 
@@ -185,7 +177,5 @@ public class ITRequest extends DataModel<ITRequest> {
                 "\nAt: " + ReqDate.toString() +
                 "\nTask: " + ReqType +
                 "\nAdditional note: " + ReqDetails + "\n \n";
-
-
     }
 }

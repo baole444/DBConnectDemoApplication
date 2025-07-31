@@ -9,7 +9,6 @@ import Sky.Listener.Event;
 import Sky.Listener.EventListener;
 import Sky.Listener.EventType;
 import dbConnect.DBConnect;
-import dbConnect.models.ITRequest;
 
 import javax.swing.*;
 import java.awt.*;

@@ -8,7 +8,6 @@ import Sky.Listener.EventListener;
 import Sky.Listener.EventType;
 import Sky.Table.ITRequestJTable;
 import dbConnect.DBConnect;
-import dbConnect.models.ITRequest;
 import org.bson.types.ObjectId;
 
 import javax.swing.*;

@@ -1,7 +1,7 @@
 package Sky.Table;
 
 import Sky.Cat.Main;
-import dbConnect.models.ITRequest;
+import Sky.Cat.ITRequest;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.List;
