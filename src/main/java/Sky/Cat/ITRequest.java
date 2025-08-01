@@ -1,26 +1,20 @@
 package Sky.Cat;
 
-import com.mongodb.MongoException;
 import dbConnect.DataModel;
-import dbConnect.mapper.DocumentInterface;
-import dbConnect.mapper.ResultSetInterface;
 import dbConnect.models.autogen.AutomaticField;
 import dbConnect.models.autogen.PrimaryField;
 import dbConnect.models.constrain.MaxLength;
 import dbConnect.models.constrain.MongoOnly;
+import dbConnect.models.constrain.MySQLOnly;
 import dbConnect.models.meta.CollectionName;
 import dbConnect.models.meta.TableName;
 import dbConnect.models.notnull.NotNullField;
-import org.bson.Document;
 import org.bson.types.ObjectId;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 @TableName("ITRequest")
 @CollectionName("requests")
 public class ITRequest extends DataModel<ITRequest> {
-    @AutomaticField @PrimaryField
+    @AutomaticField @PrimaryField @MySQLOnly
     private int ReqID;
 
     @MongoOnly @AutomaticField
@@ -124,43 +118,6 @@ public class ITRequest extends DataModel<ITRequest> {
 
     public void setReqDetails(String reqDetails) {
         ReqDetails = reqDetails;
-    }
-
-    public static class ITRequestSQLMap implements ResultSetInterface<ITRequest> {
-        @Override
-        public ITRequest map(ResultSet resultSet) throws SQLException {
-            int ReqID = resultSet.getInt("ReqID");
-            String ReqName = resultSet.getString("ReqName");
-            java.util.Date ReqDate = resultSet.getDate("ReqDate");
-            String ReqEmail = resultSet.getString("ReqEmail");
-            String ReqType = resultSet.getString("ReqType");
-            String ReqDetails = resultSet.getString("ReqDetails");
-            return new ITRequest(ReqID, ReqName, ReqDate, ReqEmail, ReqType, ReqDetails);
-        }
-    }
-
-    public static class ITRequestMongoMap implements DocumentInterface<ITRequest> {
-        @Override
-        public ITRequest map(Document document) throws MongoException {
-            ObjectId id = document.getObjectId("_id");
-            String ReqName = document.getString("ReqName");
-            java.util.Date ReqDate = document.getDate("ReqDate");
-            String ReqEmail = document.getString("ReqEmail");
-            String ReqType = document.getString("ReqType");
-            String ReqDetails = document.getString("ReqDetails");
-            return new ITRequest(id, ReqName, ReqDate, ReqEmail, ReqType, ReqDetails);
-        }
-    }
-
-    @Override
-    public ResultSetInterface<ITRequest> getTableMap() {
-        return new ITRequestSQLMap();
-
-    }
-
-    @Override
-    public DocumentInterface<ITRequest> getCollectionMap() {
-        return new ITRequestMongoMap();
     }
 
     @Override

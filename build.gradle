@@ -18,6 +18,7 @@ repositories {
 
 dependencies {
     implementation fileTree('Lib') { include '*.jar' }
+    implementation("com.mysql:mysql-connector-j:9.2.0")
     implementation("org.mongodb:mongodb-driver-sync:5.3.1")
     implementation("org.mongodb:bson:5.3.1")
     implementation("com.google.code.gson:gson:2.12.1")
