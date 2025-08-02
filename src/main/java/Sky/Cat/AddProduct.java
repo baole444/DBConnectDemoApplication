@@ -29,6 +29,9 @@ public class AddProduct extends javax.swing.JFrame {
         initComponents();
 
         getContentPane().setBackground(new Color(165,196,221));
+
+        loadCompanyComboBox();
+        loadDateSelector();
     }
 
     /**
@@ -451,7 +454,7 @@ public class AddProduct extends javax.swing.JFrame {
             List<Company> companies = DBConnect.retrieveAll(Company.class);
             companyCodeComboBox.removeAllItems();
             for (Company company : companies) {
-                companyCodeComboBox.addItem(company.getCompanyCode());
+                companyCodeComboBox.addItem(company);
             }
         } catch (Exception e) {
             System.out.println("Error loading companies: " + e.getMessage());
@@ -463,8 +466,10 @@ public class AddProduct extends javax.swing.JFrame {
             // Required fields
             String productCode = productCodeField.getText().trim();
             String productName = productNameField.getText().trim();
-            String companyCode = (String) companyCodeComboBox.getSelectedItem();
+            Company selectedCompany = (Company) companyCodeComboBox.getSelectedItem();
 
+            String companyCode = null;
+            if (selectedCompany != null) companyCode = selectedCompany.getCompanyCode();
             double importPrice;
             double profitRate;
 
@@ -547,6 +552,13 @@ public class AddProduct extends javax.swing.JFrame {
         }
     }
 
+    // Add this method to your AddProduct.java class
+    private void loadDateSelector() {
+        importDateSpinner.setModel(dateSpinnerDataModel);
+        JSpinner.DateEditor editor = new JSpinner.DateEditor(importDateSpinner, "yyyy-MM-dd");
+        importDateSpinner.setEditor(editor);
+    }
+
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
@@ -569,7 +581,7 @@ public class AddProduct extends javax.swing.JFrame {
     private javax.swing.JTextArea categoriesTextArea;
     private javax.swing.JButton clearInfoButton;
     private javax.swing.JTextArea colorsTextArea;
-    private javax.swing.JComboBox<String> companyCodeComboBox;
+    private javax.swing.JComboBox<Company> companyCodeComboBox;
     private javax.swing.JLabel detailWarnLabel;
     private javax.swing.JTextArea featuresTextArea;
     private javax.swing.JSpinner importDateSpinner;

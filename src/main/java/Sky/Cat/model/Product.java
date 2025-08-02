@@ -207,13 +207,6 @@ public class Product extends DataModel<Product> {
 
     @Override
     public String toString() {
-        return "Product{" +
-                "Code='" + productCode + '\'' +
-                ", Name='" + productName + '\'' +
-                ", Price=" + importPrice +
-                ", profitRate=" + profitRate +
-                ", companyCode='" + companyCode + '\'' +
-                ", Stock=" + stockQuantity +
-                '}';
+        return productCode + " - " + productName;
     }
 }

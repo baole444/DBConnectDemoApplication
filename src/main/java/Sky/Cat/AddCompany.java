@@ -481,7 +481,7 @@ public class AddCompany extends javax.swing.JFrame {
         companyCodeField.setText("");
         companyNameField.setText("");
         taxCodeField.setText("");
-        establishedYearSpinner.setValue(null);
+        establishedYearSpinner.setValue(2000);
         websiteField.setText("");
         isPublicCheckbox.setSelected(false);
         revenueField.setText("");

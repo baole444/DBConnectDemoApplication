@@ -151,10 +151,6 @@ public class Company extends DataModel<Company> {
 
     @Override
     public String toString() {
-        return "Company{" +
-                "Code='" + companyCode + '\'' +
-                ", Name='" + companyName + '\'' +
-                ", Established=" + establishedYear +
-                '}';
+        return companyCode + " - " + companyName;
     }
 }

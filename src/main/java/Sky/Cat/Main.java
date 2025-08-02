@@ -500,8 +500,16 @@ public class Main extends javax.swing.JFrame implements DataListener {
     private void miAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miAddActionPerformed
         if (databaseMode == DatabaseMode.None) return;
 
-        AddRequest addRequest = new AddRequest();
-        addRequest.setVisible(true);
+        switch (currentTableType) {
+            case Company -> {
+                AddCompany addCompany = new AddCompany();
+                addCompany.setVisible(true);
+            }
+            case Product -> {
+                AddProduct addProduct = new AddProduct();
+                addProduct.setVisible(true);
+            }
+        }
     }//GEN-LAST:event_miAddActionPerformed
 
     private void miDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miDeleteActionPerformed
@@ -586,8 +594,16 @@ public class Main extends javax.swing.JFrame implements DataListener {
     private void addRequestButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRequestButtonActionPerformed
         if (databaseMode == DatabaseMode.None) return;
 
-        AddRequest addRequest = new AddRequest();
-        addRequest.setVisible(true);
+        switch (currentTableType) {
+            case Company -> {
+                AddCompany addCompany = new AddCompany();
+                addCompany.setVisible(true);
+            }
+            case Product -> {
+                AddProduct addProduct = new AddProduct();
+                addProduct.setVisible(true);
+            }
+        }
     }//GEN-LAST:event_addRequestButtonActionPerformed
 
     private void deleteRequestButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteRequestButtonActionPerformed
