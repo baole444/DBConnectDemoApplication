@@ -2,11 +2,15 @@
 package Sky.Cat;
 
 
+import Sky.Cat.model.Company;
+import Sky.Cat.model.Product;
 import Sky.Listener.DataListener;
 import Sky.Listener.Event;
 import Sky.Listener.EventListener;
 import Sky.Listener.EventType;
+import Sky.Table.CompanyJTable;
 import Sky.Table.ITRequestJTable;
+import Sky.Table.ProductJTable;
 import dbConnect.DBConnect;
 import org.bson.types.ObjectId;
 
@@ -21,11 +25,22 @@ public class Main extends javax.swing.JFrame implements DataListener {
         MongoDB
     }
 
+    public enum TableType {
+        Company, Product
+    }
+
+    private static TableType currentTableType = TableType.Company;
+
     public enum SearchCondition {
-        ID("ReqID", "_id"),
-        Name("ReqName", "ReqName"),
-        Email("ReqEmail", "ReqEmail"),
-        Task("ReqType", "ReqType");
+        // For Company
+        COMPANY_CODE("companyCode", "companyCode"),
+        COMPANY_NAME("companyName", "companyName"),
+        TAX_CODE("taxCode", "taxCode"),
+
+        // For Product
+        PRODUCT_CODE("productCode", "productCode"),
+        PRODUCT_NAME("productName", "productName"),
+        COMPANY_CODE_PRODUCT("companyCode", "companyCode");
 
         private final String sql;
         private final String mongo;
@@ -42,13 +57,22 @@ public class Main extends javax.swing.JFrame implements DataListener {
         public String getMongo() {
             return this.mongo;
         }
+
+        public static SearchCondition[] getCompanyConditions() {
+            return new SearchCondition[]{COMPANY_CODE, COMPANY_NAME, TAX_CODE};
+        }
+
+        public static SearchCondition[] getProductConditions() {
+            return new SearchCondition[]{PRODUCT_CODE, PRODUCT_NAME, COMPANY_CODE_PRODUCT};
+        }
     }
 
-    private static SearchCondition searchCondition = SearchCondition.ID;
+    private static SearchCondition searchCondition;
 
     private static DatabaseMode databaseMode = DatabaseMode.None;
 
-    ITRequestJTable itRequestJTable = new ITRequestJTable();
+    CompanyJTable companyJTable = new CompanyJTable();
+    ProductJTable productJTable = new ProductJTable();
 
     private final String searchTips = "(Press search button or press Enter on keyboard to start searching)";
 
@@ -64,6 +88,9 @@ public class Main extends javax.swing.JFrame implements DataListener {
         SearchableValidator();
 
         EventListener.addListener(this);
+
+        currentTableType = TableType.Company;
+        updateSearchConditions();
     }
 
     /**
@@ -172,7 +199,7 @@ public class Main extends javax.swing.JFrame implements DataListener {
         TablePopUp.add(Product);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("IT Request Controller");
+        setTitle("Storage Manager");
         setBackground(new java.awt.Color(165, 196, 221));
         setForeground(new java.awt.Color(108, 155, 125));
         setLocationByPlatform(true);
@@ -316,6 +343,7 @@ public class Main extends javax.swing.JFrame implements DataListener {
         RequestMenu.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         RequestMenu.setText("Operations");
         RequestMenu.setToolTipText("List CURT operations");
+        RequestMenu.setActionCommand(" Operations ");
         RequestMenu.setFont(new java.awt.Font("Consolas", 1, 14)); // NOI18N
         RequestMenu.addMenuListener(new javax.swing.event.MenuListener() {
             public void menuCanceled(javax.swing.event.MenuEvent evt) {
@@ -330,6 +358,8 @@ public class Main extends javax.swing.JFrame implements DataListener {
 
         TableMenu.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         TableMenu.setText("Tables");
+        TableMenu.setActionCommand(" Tables ");
+        TableMenu.setFont(new java.awt.Font("Consolas", 1, 14)); // NOI18N
         TableMenu.addMenuListener(new javax.swing.event.MenuListener() {
             public void menuCanceled(javax.swing.event.MenuEvent evt) {
             }
@@ -461,6 +491,10 @@ public class Main extends javax.swing.JFrame implements DataListener {
         if (RequestPopUp.isVisible() && !RequestPopUp.getBounds().contains(evt.getPoint())) {
             RequestPopUp.setVisible(false);
         }
+
+        if (TablePopUp.isVisible() && !TablePopUp.getBounds().contains(evt.getPoint())) {
+            TablePopUp.setVisible(false);
+        }
     }//GEN-LAST:event_formMouseClicked
 
     private void miAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miAddActionPerformed
@@ -496,50 +530,21 @@ public class Main extends javax.swing.JFrame implements DataListener {
         try {
             if (databaseMode.equals(DatabaseMode.None)) throw new IllegalStateException("Database not selected!");
 
-            if (searchCondition.equals(SearchCondition.ID) && databaseMode.equals(DatabaseMode.MySQL)) {
-                int fieldVal = Integer.parseInt(requestSearchField.getText());
-                if (fieldVal >= 0) {
-                    if (!searchWarnLable.getText().equals(searchTips)) {
-                        searchWarnLable.setForeground(new Color(0,153,0));
-                        searchWarnLable.setText(searchTips);
-                    }
-                    searchButton.setEnabled(true);
-
-                } else {
-                    searchButton.setEnabled(false);
-                    searchWarnLable.setForeground(new Color(255,153,51));
-                    searchWarnLable.setText("Warning: your input of '" + requestSearchField.getText() + "' should be positive integer!" );
-                }
-            } else if (searchCondition.equals(SearchCondition.ID) && databaseMode.equals(DatabaseMode.MongoDB)) {
-                ObjectId fieldVal = new ObjectId(requestSearchField.getText());
+            String fieldVal = requestSearchField.getText();
+            if (fieldVal.isBlank()) {
+                searchButton.setEnabled(false);
+                searchWarnLable.setForeground(new Color(255,153,51));
+                searchWarnLable.setText("Please enter value to search.");
+            } else {
                 searchButton.setEnabled(true);
                 searchWarnLable.setForeground(new Color(0,153,0));
                 searchWarnLable.setText(searchTips);
-            } else if (!searchCondition.equals(SearchCondition.ID)) {
-                String fieldVal = requestSearchField.getText();
-                if (fieldVal.isBlank()) {
-                    searchButton.setEnabled(false);
-                    searchWarnLable.setForeground(new Color(255,153,51));
-                    searchWarnLable.setText("Please enter value to search.");
-                } else {
-                    searchButton.setEnabled(true);
-                    searchWarnLable.setForeground(new Color(0,153,0));
-                    searchWarnLable.setText(searchTips);
-                }
             }
 
-        } catch (IllegalStateException | IllegalArgumentException e) {
+        } catch (IllegalStateException e) {
             searchButton.setEnabled(false);
-            if (e instanceof IllegalStateException) {
-                searchWarnLable.setForeground(new Color(255,153,51));
-                searchWarnLable.setText("Warning: Database Mode is currently set to None" );
-            } else if (e instanceof NumberFormatException){
-                searchWarnLable.setForeground(new Color(255,51,51));
-                searchWarnLable.setText("Error: your input of '" + requestSearchField.getText() + "' is not an integer!" );
-            } else {
-                searchWarnLable.setForeground(new Color(255,153,51));
-                searchWarnLable.setText("Warning: invalid ID format!");
-            }
+            searchWarnLable.setForeground(new Color(255,153,51));
+            searchWarnLable.setText("Warning: Database Mode is currently set to None");
         }
     }
 
@@ -616,15 +621,21 @@ public class Main extends javax.swing.JFrame implements DataListener {
     }//GEN-LAST:event_searchConditionComboxActionPerformed
 
     private void TableMenuMenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_TableMenuMenuSelected
-        // TODO add your handling code here:
+        Company.setText("Company Table");
+        Product.setText("Product Table");
+        TablePopUp.show(TableMenu, 0, TableMenu.getHeight());
     }//GEN-LAST:event_TableMenuMenuSelected
 
     private void CompanyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CompanyActionPerformed
-        // TODO add your handling code here:
+        currentTableType = TableType.Company;
+        updateSearchConditions();
+        loadTableData();
     }//GEN-LAST:event_CompanyActionPerformed
 
     private void ProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ProductActionPerformed
-        // TODO add your handling code here:
+        currentTableType = TableType.Product;
+        updateSearchConditions();
+        loadTableData();
     }//GEN-LAST:event_ProductActionPerformed
 
     private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {
@@ -635,62 +646,72 @@ public class Main extends javax.swing.JFrame implements DataListener {
         EventListener.inform(new Event(EventType.DataEvent));
     }                                             
 
-    private List<ITRequest> getITRequest() {
-        if (databaseMode == DatabaseMode.None) return List.of();;
-
-        List<ITRequest> itRequests = DBConnect.retrieveAll(ITRequest.class);
-        return itRequests;
+    private List<Company> getCompanies() {
+        if (databaseMode == DatabaseMode.None) return List.of();
+        return DBConnect.retrieveAll(Company.class);
     }
 
-    private List<ITRequest> getITRequest(Object value) {
+    private List<Company> getCompanies(Object value) {
         if (databaseMode == DatabaseMode.None) return List.of();
-
         String condition;
+        Object searchValue = value;
 
-        switch (searchCondition) {
-            case ID -> {
-                if (databaseMode.equals(DatabaseMode.MySQL)) {
-                    condition = searchCondition.getSql() + " = ?";
-                } else {
-                    condition = "{\"" + searchCondition.getMongo() + "\" : ?}";
-                    value = new ObjectId(value.toString());
-                }
-            }
-            case Name, Email, Task -> {
-                if (databaseMode.equals(DatabaseMode.MySQL)) {
-                    condition = searchCondition.getSql() + " like ?";
-                    value = "%" + value.toString() + "%";
-                } else {
-                    condition = "{\"" + searchCondition.getMongo() + "\" : ?}";
-                    value = "/" + value.toString() + "/";
-                }
-            }
-            default -> throw new RuntimeException("Unknown searching condition");
-        }
-
-        List<ITRequest> itRequests = DBConnect.retrieve(ITRequest.class, condition, value);
-
-        if (itRequests != null) {
-            return itRequests;
+        if (databaseMode.equals(DatabaseMode.MySQL)) {
+            condition = searchCondition.getSql() + " like ?";
+            searchValue = "%" + value.toString() + "%";
         } else {
-            return List.of();
+            condition = "{\"" + searchCondition.getMongo() + "\" : ?}";
+            searchValue = "/" + value.toString() + "/";
         }
+        return DBConnect.retrieve(Company.class, condition, searchValue);
+    }
+
+    private List<Product> getProducts() {
+        if (databaseMode == DatabaseMode.None) return List.of();
+        return DBConnect.retrieveAll(Product.class);
+    }
+
+    private List<Product> getProducts(Object value) {
+        if (databaseMode == DatabaseMode.None) return List.of();
+        String condition;
+        Object searchValue = value;
+
+        if (databaseMode.equals(DatabaseMode.MySQL)) {
+            condition = searchCondition.getSql() + " like ?";
+            searchValue = "%" + value.toString() + "%";
+        } else {
+            condition = "{\"" + searchCondition.getMongo() + "\" : ?}";
+            searchValue = "/" + value.toString() + "/";
+        }
+        return DBConnect.retrieve(Product.class, condition, searchValue);
     }
 
     private void loadTableData() {
         if (databaseMode == DatabaseMode.None) return;
 
-        List<ITRequest> itRequestList = getITRequest();
-        itRequestJTable.updateData(itRequestList);
-        DisplayTable.setModel(itRequestJTable);
+        if (currentTableType == TableType.Company) {
+            List<Company> companyList = getCompanies();
+            companyJTable.updateData(companyList);
+            DisplayTable.setModel(companyJTable);
+        } else {
+            List<Product> productList = getProducts();
+            productJTable.updateData(productList);
+            DisplayTable.setModel(productJTable);
+        }
     }
 
     private void loadTableData(Object value) {
         if (databaseMode == DatabaseMode.None) return;
 
-        List<ITRequest> itRequestList = getITRequest(value);
-        itRequestJTable.updateData(itRequestList);
-        DisplayTable.setModel(itRequestJTable);
+        if (currentTableType == TableType.Company) {
+            List<Company> companyList = getCompanies(value);
+            companyJTable.updateData(companyList);
+            DisplayTable.setModel(companyJTable);
+        } else {
+            List<Product> productList = getProducts(value);
+            productJTable.updateData(productList);
+            DisplayTable.setModel(productJTable);
+        }
     }
     @Override
     public void onUpdated(Event event) {
@@ -706,9 +727,9 @@ public class Main extends javax.swing.JFrame implements DataListener {
             }
             case SwitchDatabaseEvent -> {
                 if (databaseMode == DatabaseMode.MySQL) {
-                    DBConnect.initializeSQL("VBoxData");
+                    DBConnect.initializeSQL("store_storage");
                 } else if (databaseMode == DatabaseMode.MongoDB) {
-                    DBConnect.initializeMongo("VBoxData");
+                    DBConnect.initializeMongo("store_storage");
                 }
                 loadTableData();
                 SearchableValidator();
@@ -716,6 +737,23 @@ public class Main extends javax.swing.JFrame implements DataListener {
             default -> System.out.println("An unknown event happened. Type: " + event.type);
         }
 
+    }
+
+    private void updateSearchConditions() {
+        searchConditionCombox.removeAllItems();
+        SearchCondition[] conditions = currentTableType == TableType.Company ?
+                SearchCondition.getCompanyConditions() : SearchCondition.getProductConditions();
+
+        for (SearchCondition condition : conditions) {
+            searchConditionCombox.addItem(condition);
+        }
+
+        if (conditions.length > 0) {
+            searchCondition = conditions[0];
+            searchConditionCombox.setSelectedItem(searchCondition);
+        }
+
+        SearchableValidator();
     }
 
     public static void main(String[] args) {
