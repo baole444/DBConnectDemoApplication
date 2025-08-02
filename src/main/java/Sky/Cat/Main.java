@@ -83,6 +83,11 @@ public class Main extends javax.swing.JFrame implements DataListener {
         jSeparator6 = new javax.swing.JPopupMenu.Separator();
         miDelete = new javax.swing.JMenuItem();
         jSeparator3 = new javax.swing.JPopupMenu.Separator();
+        TablePopUp = new javax.swing.JPopupMenu();
+        jSeparator10 = new javax.swing.JPopupMenu.Separator();
+        Company = new javax.swing.JMenuItem();
+        jSeparator11 = new javax.swing.JPopupMenu.Separator();
+        Product = new javax.swing.JMenuItem();
         TableLable = new javax.swing.JLabel();
         ScrollPanel = new javax.swing.JScrollPane();
         DisplayTable = new javax.swing.JTable();
@@ -106,6 +111,7 @@ public class Main extends javax.swing.JFrame implements DataListener {
         searchConditionCombox = new javax.swing.JComboBox<>();
         MenuBar = new javax.swing.JMenuBar();
         RequestMenu = new javax.swing.JMenu();
+        TableMenu = new javax.swing.JMenu();
 
         RequestPopUp.setFont(new java.awt.Font("Consolas", 0, 14)); // NOI18N
         RequestPopUp.setLabel("Request menu");
@@ -146,6 +152,25 @@ public class Main extends javax.swing.JFrame implements DataListener {
         RequestPopUp.add(miDelete);
         RequestPopUp.add(jSeparator3);
 
+        TablePopUp.add(jSeparator10);
+
+        Company.setText("jMenuItem1");
+        Company.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CompanyActionPerformed(evt);
+            }
+        });
+        TablePopUp.add(Company);
+        TablePopUp.add(jSeparator11);
+
+        Product.setText("jMenuItem1");
+        Product.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ProductActionPerformed(evt);
+            }
+        });
+        TablePopUp.add(Product);
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("IT Request Controller");
         setBackground(new java.awt.Color(165, 196, 221));
@@ -160,7 +185,7 @@ public class Main extends javax.swing.JFrame implements DataListener {
         });
 
         TableLable.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        TableLable.setText("Table of requests");
+        TableLable.setText("Storage Manager");
         TableLable.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
 
         ScrollPanel.setBackground(new java.awt.Color(121, 137, 145));
@@ -289,8 +314,8 @@ public class Main extends javax.swing.JFrame implements DataListener {
         MenuBar.setFont(new java.awt.Font("Consolas", 1, 14)); // NOI18N
 
         RequestMenu.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        RequestMenu.setText("Request");
-        RequestMenu.setToolTipText("Contain some function for managing request");
+        RequestMenu.setText("Operations");
+        RequestMenu.setToolTipText("List CURT operations");
         RequestMenu.setFont(new java.awt.Font("Consolas", 1, 14)); // NOI18N
         RequestMenu.addMenuListener(new javax.swing.event.MenuListener() {
             public void menuCanceled(javax.swing.event.MenuEvent evt) {
@@ -302,6 +327,19 @@ public class Main extends javax.swing.JFrame implements DataListener {
             }
         });
         MenuBar.add(RequestMenu);
+
+        TableMenu.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        TableMenu.setText("Tables");
+        TableMenu.addMenuListener(new javax.swing.event.MenuListener() {
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
+                TableMenuMenuSelected(evt);
+            }
+        });
+        MenuBar.add(TableMenu);
 
         setJMenuBar(MenuBar);
 
@@ -577,6 +615,18 @@ public class Main extends javax.swing.JFrame implements DataListener {
         SearchableValidator();
     }//GEN-LAST:event_searchConditionComboxActionPerformed
 
+    private void TableMenuMenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_TableMenuMenuSelected
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TableMenuMenuSelected
+
+    private void CompanyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CompanyActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_CompanyActionPerformed
+
+    private void ProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ProductActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ProductActionPerformed
+
     private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {
         if (databaseMode == DatabaseMode.None) return;
 
@@ -684,12 +734,16 @@ public class Main extends javax.swing.JFrame implements DataListener {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem Company;
     private javax.swing.JTable DisplayTable;
     private javax.swing.JMenuBar MenuBar;
+    private javax.swing.JMenuItem Product;
     private javax.swing.JMenu RequestMenu;
     private javax.swing.JPopupMenu RequestPopUp;
     private javax.swing.JScrollPane ScrollPanel;
     private javax.swing.JLabel TableLable;
+    private javax.swing.JMenu TableMenu;
+    private javax.swing.JPopupMenu TablePopUp;
     private javax.swing.JButton addRequestButton;
     private javax.swing.JComboBox<DatabaseMode> databaseTypeSelector;
     private javax.swing.JButton deleteRequestButton;
@@ -697,6 +751,8 @@ public class Main extends javax.swing.JFrame implements DataListener {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator10;
+    private javax.swing.JPopupMenu.Separator jSeparator11;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JSeparator jSeparator4;

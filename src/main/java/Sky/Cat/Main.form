@@ -65,6 +65,34 @@
         </Component>
       </SubComponents>
     </Container>
+    <Container class="javax.swing.JPopupMenu" name="TablePopUp">
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
+        <Property name="useNullLayout" type="boolean" value="true"/>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JPopupMenu$Separator" name="jSeparator10">
+        </Component>
+        <MenuItem class="javax.swing.JMenuItem" name="Company">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="jMenuItem1"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="CompanyActionPerformed"/>
+          </Events>
+        </MenuItem>
+        <Component class="javax.swing.JPopupMenu$Separator" name="jSeparator11">
+        </Component>
+        <MenuItem class="javax.swing.JMenuItem" name="Product">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="jMenuItem1"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ProductActionPerformed"/>
+          </Events>
+        </MenuItem>
+      </SubComponents>
+    </Container>
     <Menu class="javax.swing.JMenuBar" name="MenuBar">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -79,14 +107,27 @@
                 <EmptyBorder/>
               </Border>
             </Property>
-            <Property name="text" type="java.lang.String" value="Request"/>
-            <Property name="toolTipText" type="java.lang.String" value="Contain some function for managing request"/>
+            <Property name="text" type="java.lang.String" value="Operations"/>
+            <Property name="toolTipText" type="java.lang.String" value="List CURT operations"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Consolas" size="14" style="1"/>
             </Property>
           </Properties>
           <Events>
             <EventHandler event="menuSelected" listener="javax.swing.event.MenuListener" parameters="javax.swing.event.MenuEvent" handler="RequestMenuMenuSelected"/>
+          </Events>
+        </Menu>
+        <Menu class="javax.swing.JMenu" name="TableMenu">
+          <Properties>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
+                <EmptyBorder/>
+              </Border>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Tables"/>
+          </Properties>
+          <Events>
+            <EventHandler event="menuSelected" listener="javax.swing.event.MenuListener" parameters="javax.swing.event.MenuEvent" handler="TableMenuMenuSelected"/>
           </Events>
         </Menu>
       </SubComponents>
@@ -245,7 +286,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Segoe UI" size="24" style="1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Table of requests"/>
+        <Property name="text" type="java.lang.String" value="Storage Manager"/>
         <Property name="verticalAlignment" type="int" value="3"/>
       </Properties>
     </Component>
