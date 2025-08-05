@@ -437,7 +437,7 @@ public class AddProduct extends javax.swing.JFrame {
         importPriceField.setText("");
         profitRateField.setText("");
         companyCodeComboBox.setSelectedIndex(-1);
-        importDateSpinner.setValue(null);
+        importDateSpinner.setValue(new Date());
         stockQuantitySpinner.setValue(null);
         warrantyField.setText("");
         isBusinessModelCheckbox.setSelected(false);
