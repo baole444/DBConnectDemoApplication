@@ -515,8 +515,16 @@ public class Main extends javax.swing.JFrame implements DataListener {
     private void miDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miDeleteActionPerformed
         if (databaseMode == DatabaseMode.None) return;
 
-        DeleteRequest deleteRequest = new DeleteRequest();
-        deleteRequest.setVisible(true);
+        switch (currentTableType) {
+            case Company -> {
+                DeleteCompany deleteCompany = new DeleteCompany();
+                deleteCompany.setVisible(true);
+            }
+            case Product -> {
+                DeleteProduct deleteProduct = new DeleteProduct();
+                deleteProduct.setVisible(true);
+            }
+        }
     }//GEN-LAST:event_miDeleteActionPerformed
 
     private void requestSearchFieldActionPerformed(java.awt.event.ActionEvent evt) {
@@ -755,10 +763,10 @@ public class Main extends javax.swing.JFrame implements DataListener {
                 System.out.println("A search event for value: '" + searchValue + "' triggered. Updating data...");
             }
             case SwitchDatabaseEvent -> {
-                if (databaseMode == DatabaseMode.MySQL) {
-                    DBConnect.initializeSQL("store_storage");
-                } else if (databaseMode == DatabaseMode.MongoDB) {
-                    DBConnect.initializeMongo("store_storage");
+                switch (databaseMode) {
+                    case MySQL -> DBConnect.initializeSQL("store_storage");
+                    case MongoDB -> DBConnect.initializeMongo("store_storage");
+                    case None -> clearAllTable();
                 }
                 loadTableData();
                 SearchableValidator();
@@ -766,6 +774,17 @@ public class Main extends javax.swing.JFrame implements DataListener {
             default -> System.out.println("An unknown event happened. Type: " + event.type);
         }
 
+    }
+
+    private void clearAllTable() {
+        companyJTable.updateData(List.of());
+        productJTable.updateData(List.of());
+
+        if (currentTableType == TableType.Company) {
+            DisplayTable.setModel(companyJTable);
+        } else {
+            DisplayTable.setModel(productJTable);
+        }
     }
 
     private void updateSearchConditions() {

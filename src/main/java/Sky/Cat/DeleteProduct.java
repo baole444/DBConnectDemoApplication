@@ -5,38 +5,26 @@
 package Sky.Cat;
 
 
-import Sky.Cat.model.Company;
 import Sky.Cat.model.Product;
-import Sky.DateModel.DateSpinnerDataModel;
 import Sky.Listener.Event;
 import Sky.Listener.EventListener;
 import Sky.Listener.EventType;
-import com.google.gson.Gson;
 import dbConnect.DBConnect;
 import dbConnect.models.json.JsonUtility;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
+import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class UpdateProduct extends javax.swing.JFrame {
-    private Map<String, Company> companyCodes = new HashMap<>();
-    DateSpinnerDataModel dateSpinnerDataModel = new DateSpinnerDataModel();
+public class DeleteProduct extends javax.swing.JFrame {
 
-    public UpdateProduct() {
+    public DeleteProduct() {
         initComponents();
 
         getContentPane().setBackground(new Color(165,196,221));
-        loadDateSelector();
-        loadCompanyComboBox();
         loadProductComboBox();
-    }
-
-    public UpdateProduct(String productCode) {
-        this();
-        fillComboBox(productCode);
+        fillComboBox();
     }
 
     /**
@@ -49,13 +37,12 @@ public class UpdateProduct extends javax.swing.JFrame {
     private void initComponents() {
 
         cancelButton = new javax.swing.JButton();
-        updateProductButton = new javax.swing.JButton();
+        deleteProductButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         importPriceField = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        clearInfoButton = new javax.swing.JButton();
         detailWarnLabel = new javax.swing.JLabel();
         productNameField = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
@@ -71,26 +58,22 @@ public class UpdateProduct extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         categoriesTextArea = new javax.swing.JTextArea();
         jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
         profitRateField = new javax.swing.JTextField();
-        companyCodeComboBox = new javax.swing.JComboBox<>();
-        importDateSpinner = new javax.swing.JSpinner();
         jLabel12 = new javax.swing.JLabel();
-        stockQuantitySpinner = new javax.swing.JSpinner();
-        jLabel13 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         featuresTextArea = new javax.swing.JTextArea();
         jScrollPane5 = new javax.swing.JScrollPane();
         accessoriesTextArea = new javax.swing.JTextArea();
-        jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
-        jLabel17 = new javax.swing.JLabel();
         isBusinessModelCheckbox = new javax.swing.JCheckBox();
         productIdComboBox = new javax.swing.JComboBox<>();
+        companyCodeField = new javax.swing.JTextField();
+        stockQuantityField = new javax.swing.JTextField();
+        importDateField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Update Product");
+        setTitle("Delete Product");
         setAlwaysOnTop(true);
         setLocationByPlatform(true);
 
@@ -102,12 +85,12 @@ public class UpdateProduct extends javax.swing.JFrame {
             }
         });
 
-        updateProductButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        updateProductButton.setText("Update Product");
-        updateProductButton.setToolTipText("Update an existing product in the database");
-        updateProductButton.addActionListener(new java.awt.event.ActionListener() {
+        deleteProductButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        deleteProductButton.setText("Delete Product");
+        deleteProductButton.setToolTipText("Delete an existing product in the database");
+        deleteProductButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                updateProductButtonActionPerformed(evt);
+                deleteProductButtonActionPerformed(evt);
             }
         });
 
@@ -115,34 +98,13 @@ public class UpdateProduct extends javax.swing.JFrame {
 
         jLabel2.setText("Product Name");
 
-        importPriceField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                importPriceFieldKeyReleased(evt);
-            }
-        });
+        importPriceField.setEditable(false);
 
         jLabel4.setText("Import Price");
 
         jLabel7.setText("Company Code");
 
-        clearInfoButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        clearInfoButton.setText("Clear info");
-        clearInfoButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                clearInfoButtonActionPerformed(evt);
-            }
-        });
-
-        productNameField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                productNameFieldActionPerformed(evt);
-            }
-        });
-        productNameField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                productNameFieldKeyReleased(evt);
-            }
-        });
+        productNameField.setEditable(false);
 
         jLabel9.setText("Profit Rate");
 
@@ -150,85 +112,61 @@ public class UpdateProduct extends javax.swing.JFrame {
 
         jLabel5.setText("Spec. (JSON)");
 
-        warrantyField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                warrantyFieldActionPerformed(evt);
-            }
-        });
-        warrantyField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                warrantyFieldKeyReleased(evt);
-            }
-        });
+        warrantyField.setEditable(false);
 
         jLabel6.setText("Warranty");
 
+        colorsTextArea.setEditable(false);
         colorsTextArea.setColumns(20);
         colorsTextArea.setRows(5);
         jScrollPane1.setViewportView(colorsTextArea);
 
         jLabel8.setText("Categories");
 
+        specificationsTextArea.setEditable(false);
         specificationsTextArea.setColumns(20);
         specificationsTextArea.setRows(5);
         jScrollPane2.setViewportView(specificationsTextArea);
 
+        categoriesTextArea.setEditable(false);
         categoriesTextArea.setColumns(20);
         categoriesTextArea.setRows(5);
         jScrollPane3.setViewportView(categoriesTextArea);
 
         jLabel10.setText("Colors");
 
-        jLabel11.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
-        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel11.setText("Each type seperate with a comma \",\"");
-
-        profitRateField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                profitRateFieldActionPerformed(evt);
-            }
-        });
-        profitRateField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                profitRateFieldKeyReleased(evt);
-            }
-        });
+        profitRateField.setEditable(false);
 
         jLabel12.setText("Stock Quantity");
 
-        stockQuantitySpinner.setModel(new javax.swing.SpinnerNumberModel(1, 1, null, 1));
-
-        jLabel13.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
-        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel13.setText("Each type seperate with a comma \",\"");
-
+        featuresTextArea.setEditable(false);
         featuresTextArea.setColumns(20);
         featuresTextArea.setRows(5);
         jScrollPane4.setViewportView(featuresTextArea);
 
+        accessoriesTextArea.setEditable(false);
         accessoriesTextArea.setColumns(20);
         accessoriesTextArea.setRows(5);
         jScrollPane5.setViewportView(accessoriesTextArea);
-
-        jLabel14.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
-        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel14.setText("Each type seperate with a comma \",\"");
 
         jLabel15.setText("Accessories");
 
         jLabel16.setText("Features");
 
-        jLabel17.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
-        jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel17.setText("Each type seperate with a comma \",\"");
-
         isBusinessModelCheckbox.setText("Is Business Model");
+        isBusinessModelCheckbox.setEnabled(false);
 
         productIdComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 productIdComboBoxActionPerformed(evt);
             }
         });
+
+        companyCodeField.setEditable(false);
+
+        stockQuantityField.setEditable(false);
+
+        importDateField.setEditable(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -239,7 +177,6 @@ public class UpdateProduct extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel13)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -259,38 +196,35 @@ public class UpdateProduct extends javax.swing.JFrame {
                                     .addComponent(jScrollPane3)
                                     .addComponent(jScrollPane2)
                                     .addComponent(warrantyField)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                .addComponent(importPriceField, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
-                                                .addComponent(productIdComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                            .addGap(24, 24, 24)
-                                            .addComponent(jLabel2)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(productNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addComponent(importDateSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(24, 24, 24)
-                                            .addComponent(jLabel12)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(stockQuantitySpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                    .addComponent(importPriceField, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
+                                                    .addComponent(productIdComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                .addGap(24, 24, 24)
+                                                .addComponent(jLabel2)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(productNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(importDateField, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(285, 285, 285)
                                                 .addComponent(jLabel9)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(profitRateField, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addComponent(companyCodeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 586, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addComponent(isBusinessModelCheckbox))
+                                            .addComponent(isBusinessModelCheckbox))
+                                        .addGap(1, 1, 1))
                                     .addComponent(jScrollPane4)
-                                    .addComponent(jScrollPane5)))
-                            .addComponent(jLabel11)
-                            .addComponent(jLabel14)
-                            .addComponent(jLabel17)
+                                    .addComponent(jScrollPane5)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(jLabel12)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(stockQuantityField, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(companyCodeField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 586, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(updateProductButton)
-                                .addGap(58, 58, 58)
-                                .addComponent(clearInfoButton)
-                                .addGap(54, 54, 54)
+                                .addComponent(deleteProductButton)
+                                .addGap(18, 18, 18)
                                 .addComponent(cancelButton)))
                         .addGap(15, 15, 15))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -316,13 +250,13 @@ public class UpdateProduct extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(companyCodeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(companyCodeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(importDateSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel12)
-                    .addComponent(stockQuantitySpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(stockQuantityField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(importDateField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(isBusinessModelCheckbox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -342,31 +276,22 @@ public class UpdateProduct extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel8)
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel13)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(28, 28, 28)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel10))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel14)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel15))
-                .addGap(4, 4, 4)
-                .addComponent(jLabel11)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel16))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel17)
-                .addGap(18, 18, 18)
+                .addGap(40, 40, 40)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
-                    .addComponent(clearInfoButton)
-                    .addComponent(updateProductButton))
+                    .addComponent(deleteProductButton))
                 .addGap(27, 27, 27))
         );
 
@@ -377,42 +302,11 @@ public class UpdateProduct extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
-    private void clearInfoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearInfoButtonActionPerformed
-        clearProductFields();
-    }//GEN-LAST:event_clearInfoButtonActionPerformed
-
-    private void updateProductButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateProductButtonActionPerformed
-        updateProductToDatabase();
+    private void deleteProductButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteProductButtonActionPerformed
+        deleteProduct();
 
         EventListener.inform(new Event(EventType.DataEvent));
-    }//GEN-LAST:event_updateProductButtonActionPerformed
-
-    private void importPriceFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_importPriceFieldKeyReleased
-    }//GEN-LAST:event_importPriceFieldKeyReleased
-
-    private void productNameFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productNameFieldKeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_productNameFieldKeyReleased
-
-    private void productNameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productNameFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_productNameFieldActionPerformed
-
-    private void warrantyFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_warrantyFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_warrantyFieldActionPerformed
-
-    private void warrantyFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_warrantyFieldKeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_warrantyFieldKeyReleased
-
-    private void profitRateFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profitRateFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_profitRateFieldActionPerformed
-
-    private void profitRateFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_profitRateFieldKeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_profitRateFieldKeyReleased
+    }//GEN-LAST:event_deleteProductButtonActionPerformed
 
     private void productIdComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productIdComboBoxActionPerformed
         Product selectedProduct = (Product) productIdComboBox.getSelectedItem();
@@ -422,12 +316,18 @@ public class UpdateProduct extends javax.swing.JFrame {
                 productNameField.setText(selectedProduct.getProductName());
                 importPriceField.setText(String.valueOf(selectedProduct.getImportPrice()));
                 profitRateField.setText(String.valueOf(selectedProduct.getProfitRate()));
-                selectCompanyByCode(selectedProduct.getCompanyCode());
+                if (selectedProduct.getCompanyCode() != null) {
+                    companyCodeField.setText(selectedProduct.getCompanyCode());
+                }
 
                 if (selectedProduct.getImportDate() != null) {
-                    importDateSpinner.setValue(selectedProduct.getImportDate());
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    String date = dateFormat.format(selectedProduct.getImportDate());
+                    importDateField.setText(date);
                 }
-                stockQuantitySpinner.setValue(selectedProduct.getStockQuantity());
+
+                stockQuantityField.setText(Integer.toString(selectedProduct.getStockQuantity()));
+
                 warrantyField.setText(selectedProduct.getWarranty() != null ? selectedProduct.getWarranty() : "");
                 isBusinessModelCheckbox.setSelected(selectedProduct.isBusinessModel());
 
@@ -463,31 +363,14 @@ public class UpdateProduct extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_productIdComboBoxActionPerformed
 
-    // Helper Methods
-    private Map<String, Object> parseJsonToMap(String jsonString) {
-        try {
-            return JsonUtility.fromJson(jsonString, Map.class);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid JSON format: " + e.getMessage());
-        }
-    }
-
-    private List<String> parseCommaSeparatedList(String input) {
-        return Arrays.asList(input.split(","))
-                .stream()
-                .map(String::trim)
-                .filter(s -> !s.isEmpty())
-                .collect(Collectors.toList());
-    }
-
     private void clearProductFields() {
         productIdComboBox.setSelectedItem(-1);
         productNameField.setText("");
         importPriceField.setText("");
         profitRateField.setText("");
-        companyCodeComboBox.setSelectedIndex(-1);
-        importDateSpinner.setValue(new Date());
-        stockQuantitySpinner.setValue(null);
+        companyCodeField.setText("");
+        importDateField.setText("");
+        stockQuantityField.setText("");
         warrantyField.setText("");
         isBusinessModelCheckbox.setSelected(false);
         specificationsTextArea.setText("");
@@ -497,124 +380,36 @@ public class UpdateProduct extends javax.swing.JFrame {
         featuresTextArea.setText("");
     }
 
-    // Method to populate company combo box for products
-    private void loadCompanyComboBox() {
-        try {
-            List<Company> companies = DBConnect.retrieveAll(Company.class);
-            companyCodeComboBox.removeAllItems();
-            companyCodes.clear();
-
-            for (Company company : companies) {
-                companyCodeComboBox.addItem(company);
-                companyCodes.put(company.getCompanyCode(), company);
-            }
-        } catch (Exception e) {
-            System.out.println("Error loading companies: " + e.getMessage());
-        }
-    }
-
-    private void selectCompanyByCode(String companyCode) {
-        Company target = companyCodes.get(companyCode);
-        if (target != null) {
-            companyCodeComboBox.setSelectedItem(target);
-        }
-    }
-
-    private void updateProductToDatabase() {
+    private void deleteProduct() {
         try {
             Product selectedProduct = (Product) productIdComboBox.getSelectedItem();
-
             if (selectedProduct == null) {
-                JOptionPane.showMessageDialog(this, "Please select a product to update!",
-                        "Validation Error", JOptionPane.ERROR_MESSAGE);
+                javax.swing.JOptionPane.showMessageDialog(this,
+                        "Please select a product to delete", "Error",
+                        javax.swing.JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             String productCode = selectedProduct.getProductCode();
-            String productName = productNameField.getText().trim();
-            Company selectedCompany = (Company) companyCodeComboBox.getSelectedItem();
+            Product product = new Product();
+            product.setProductCode(productCode);
 
-            String companyCode = null;
-            if (selectedCompany != null) companyCode = selectedCompany.getCompanyCode();
-            double importPrice;
-            double profitRate;
-
-            try {
-                importPrice = Double.parseDouble(importPriceField.getText().trim());
-                profitRate = Double.parseDouble(profitRateField.getText().trim());
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, "Import Price and Profit Rate must be valid numbers!", "Validation Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            // Validation
-            if (productCode.isEmpty() || productName.isEmpty() || companyCode == null) {
-                JOptionPane.showMessageDialog(this, "Product Code, Product Name, and Company Code are required!", "Validation Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            // Create product object
-            Product product = new Product(productCode, productName, importPrice, profitRate, companyCode);
-
-            // Set optional fields
-            if (importDateSpinner.getValue() != null) {
-                product.setImportDate((Date) importDateSpinner.getValue());
-            }
-
-            if (stockQuantitySpinner.getValue() != null) {
-                product.setStockQuantity((Integer) stockQuantitySpinner.getValue());
-            }
-
-            if (!warrantyField.getText().trim().isEmpty()) {
-                product.setWarranty(warrantyField.getText().trim());
-            }
-
-            product.setBusinessModel(isBusinessModelCheckbox.isSelected());
-
-            // Handle JSON and List fields
-            if (!specificationsTextArea.getText().trim().isEmpty()) {
-                try {
-                    Map<String, Object> specifications = parseJsonToMap(specificationsTextArea.getText().trim());
-                    product.setSpecifications(specifications);
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(this, "Invalid JSON format in Specifications field!", "JSON Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-            }
-
-            // Handle comma-separated lists
-            if (!categoriesTextArea.getText().trim().isEmpty()) {
-                List<String> categories = parseCommaSeparatedList(categoriesTextArea.getText().trim());
-                product.setCategories(categories);
-            }
-
-            if (!colorsTextArea.getText().trim().isEmpty()) {
-                List<String> colors = parseCommaSeparatedList(colorsTextArea.getText().trim());
-                product.setColorsAvailable(colors);
-            }
-
-            if (!accessoriesTextArea.getText().trim().isEmpty()) {
-                List<String> accessories = parseCommaSeparatedList(accessoriesTextArea.getText().trim());
-                product.setAccessories(accessories);
-            }
-
-            if (!featuresTextArea.getText().trim().isEmpty()) {
-                List<String> features = parseCommaSeparatedList(featuresTextArea.getText().trim());
-                product.setFeatures(features);
-            }
-
-            // Insert to database
-            boolean success = DBConnect.update(product);
+            boolean success = DBConnect.delete(product);
             if (success) {
-                JOptionPane.showMessageDialog(this, "Product updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                javax.swing.JOptionPane.showMessageDialog(this,
+                        "Product removed from database!", "Success",
+                        javax.swing.JOptionPane.INFORMATION_MESSAGE);
                 updateScreen();
                 clearProductFields();
             } else {
-                JOptionPane.showMessageDialog(this, "Failed to update product!", "Error", JOptionPane.ERROR_MESSAGE);
+                javax.swing.JOptionPane.showMessageDialog(this,
+                        "Cannot remove product", "Error",
+                        javax.swing.JOptionPane.ERROR_MESSAGE);
             }
-
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Cannot update product. " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Cannot remove product: " + e.getMessage(), "Error",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -630,16 +425,9 @@ public class UpdateProduct extends javax.swing.JFrame {
         }
     }
 
-    private void fillComboBox(String productCode) {
+    private void fillComboBox() {
         try {
-            String condition;
-            if (Main.getDatabaseMode() == Main.DatabaseMode.MySQL) {
-                condition = "productCode = ?";
-            } else {
-                condition = "productCode : ?";
-            }
-
-            List<Product> products = DBConnect.retrieve(Product.class, condition, productCode);
+            List<Product> products = DBConnect.retrieveAll(Product.class);
             productIdComboBox.removeAllItems();
             for (Product product : products) {
                 productIdComboBox.addItem(product);
@@ -654,23 +442,17 @@ public class UpdateProduct extends javax.swing.JFrame {
         loadProductComboBox();
     }
 
-    private void loadDateSelector() {
-        importDateSpinner.setModel(dateSpinnerDataModel);
-        JSpinner.DateEditor editor = new JSpinner.DateEditor(importDateSpinner, "yyyy-MM-dd");
-        importDateSpinner.setEditor(editor);
-    }
-
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
                  UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(UpdateProduct.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DeleteProduct.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new UpdateProduct().setVisible(true);
+                new DeleteProduct().setVisible(true);
             }
         });
     }
@@ -679,23 +461,19 @@ public class UpdateProduct extends javax.swing.JFrame {
     private javax.swing.JTextArea accessoriesTextArea;
     private javax.swing.JButton cancelButton;
     private javax.swing.JTextArea categoriesTextArea;
-    private javax.swing.JButton clearInfoButton;
     private javax.swing.JTextArea colorsTextArea;
-    private javax.swing.JComboBox<Company> companyCodeComboBox;
+    private javax.swing.JTextField companyCodeField;
+    private javax.swing.JButton deleteProductButton;
     private javax.swing.JLabel detailWarnLabel;
     private javax.swing.JTextArea featuresTextArea;
-    private javax.swing.JSpinner importDateSpinner;
+    private javax.swing.JTextField importDateField;
     private javax.swing.JTextField importPriceField;
     private javax.swing.JCheckBox isBusinessModelCheckbox;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -713,8 +491,7 @@ public class UpdateProduct extends javax.swing.JFrame {
     private javax.swing.JTextField productNameField;
     private javax.swing.JTextField profitRateField;
     private javax.swing.JTextArea specificationsTextArea;
-    private javax.swing.JSpinner stockQuantitySpinner;
-    private javax.swing.JButton updateProductButton;
+    private javax.swing.JTextField stockQuantityField;
     private javax.swing.JTextField warrantyField;
     // End of variables declaration//GEN-END:variables
 }

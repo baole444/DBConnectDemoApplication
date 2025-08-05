@@ -85,7 +85,7 @@ public class AddProduct extends javax.swing.JFrame {
         isBusinessModelCheckbox = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Add Request");
+        setTitle("Add Product");
         setAlwaysOnTop(true);
         setLocationByPlatform(true);
 

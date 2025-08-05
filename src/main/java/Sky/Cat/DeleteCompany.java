@@ -22,20 +22,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class UpdateCompany extends javax.swing.JFrame {
-    DateSpinnerDataModel dateSpinnerDataModel = new DateSpinnerDataModel();
+public class DeleteCompany extends javax.swing.JFrame {
 
-    public UpdateCompany() {
+    public DeleteCompany() {
         initComponents();
 
         getContentPane().setBackground(new Color(165,196,221));
 
-        loadCompanyComboBox();
-    }
-
-    public UpdateCompany(String companyCode) {
-        this();
-        fillComboBox(companyCode);
+        fillComboBox();
     }
 
     /**
@@ -55,10 +49,8 @@ public class UpdateCompany extends javax.swing.JFrame {
         taxCodeField = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        clearInfoButton = new javax.swing.JButton();
         detailWarnLabel = new javax.swing.JLabel();
         companyNameField = new javax.swing.JTextField();
-        establishedYearSpinner = new javax.swing.JSpinner();
         jLabel9 = new javax.swing.JLabel();
         isPublicCheckbox = new javax.swing.JCheckBox();
         jLabel3 = new javax.swing.JLabel();
@@ -74,11 +66,11 @@ public class UpdateCompany extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         contactTextArea = new javax.swing.JTextArea();
         jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
         companyIdComboBox = new javax.swing.JComboBox<>();
+        establishedYearField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Update Company");
+        setTitle("Delete Company");
         setAlwaysOnTop(true);
         setLocationByPlatform(true);
 
@@ -91,8 +83,8 @@ public class UpdateCompany extends javax.swing.JFrame {
         });
 
         updateCompanyButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        updateCompanyButton.setText("Update Company");
-        updateCompanyButton.setToolTipText("Update an existing company in the database");
+        updateCompanyButton.setText("Delete Company");
+        updateCompanyButton.setToolTipText("Delete an existing company in the database");
         updateCompanyButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 updateCompanyButtonActionPerformed(evt);
@@ -103,105 +95,57 @@ public class UpdateCompany extends javax.swing.JFrame {
 
         jLabel2.setText("Company Name");
 
-        websiteField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                websiteFieldKeyReleased(evt);
-            }
-        });
+        websiteField.setEditable(false);
 
-        taxCodeField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                taxCodeFieldKeyReleased(evt);
-            }
-        });
+        taxCodeField.setEditable(false);
 
         jLabel4.setText("Tax Code");
 
         jLabel7.setText("Website URL");
 
-        clearInfoButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        clearInfoButton.setText("Clear info");
-        clearInfoButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                clearInfoButtonActionPerformed(evt);
-            }
-        });
-
-        companyNameField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                companyNameFieldActionPerformed(evt);
-            }
-        });
-        companyNameField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                companyNameFieldKeyReleased(evt);
-            }
-        });
-
-        establishedYearSpinner.setModel(new javax.swing.SpinnerNumberModel(1970, 1, null, 1));
+        companyNameField.setEditable(false);
 
         jLabel9.setText("Established Year");
 
         isPublicCheckbox.setText("Public Company");
-        isPublicCheckbox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                isPublicCheckboxActionPerformed(evt);
-            }
-        });
+        isPublicCheckbox.setEnabled(false);
 
         jLabel3.setText("Revenue");
 
-        revenueField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                revenueFieldActionPerformed(evt);
-            }
-        });
-        revenueField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                revenueFieldKeyReleased(evt);
-            }
-        });
+        revenueField.setEditable(false);
 
         jLabel5.setText("Address (JSON)");
 
-        marketCapField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                marketCapFieldActionPerformed(evt);
-            }
-        });
-        marketCapField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                marketCapFieldKeyReleased(evt);
-            }
-        });
+        marketCapField.setEditable(false);
 
         jLabel6.setText("Market Cap");
 
+        businessTypeTextArea.setEditable(false);
         businessTypeTextArea.setColumns(20);
         businessTypeTextArea.setRows(5);
         jScrollPane1.setViewportView(businessTypeTextArea);
 
         jLabel8.setText("Contact (JSON)");
 
+        addressTextArea.setEditable(false);
         addressTextArea.setColumns(20);
         addressTextArea.setRows(5);
         jScrollPane2.setViewportView(addressTextArea);
 
+        contactTextArea.setEditable(false);
         contactTextArea.setColumns(20);
         contactTextArea.setRows(5);
         jScrollPane3.setViewportView(contactTextArea);
 
         jLabel10.setText("Business Type");
 
-        jLabel11.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
-        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel11.setText("Each type seperate with a comma \",\"");
-
         companyIdComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 companyIdComboBoxActionPerformed(evt);
             }
         });
+
+        establishedYearField.setEditable(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -232,24 +176,19 @@ public class UpdateCompany extends javax.swing.JFrame {
                             .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(establishedYearSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(companyNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(companyNameField, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
+                            .addComponent(establishedYearField)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 167, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel11)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(updateCompanyButton)
-                                        .addGap(58, 58, 58)
-                                        .addComponent(clearInfoButton)
-                                        .addGap(57, 57, 57)
-                                        .addComponent(cancelButton)))))
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(updateCompanyButton)
+                                .addGap(18, 18, 18)
+                                .addComponent(cancelButton)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(detailWarnLabel))
                     .addComponent(websiteField)
@@ -260,7 +199,7 @@ public class UpdateCompany extends javax.swing.JFrame {
                                 .addComponent(revenueField, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(isPublicCheckbox)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 235, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -275,9 +214,9 @@ public class UpdateCompany extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(establishedYearSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9)
-                    .addComponent(taxCodeField, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(taxCodeField, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(establishedYearField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
@@ -307,13 +246,10 @@ public class UpdateCompany extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel11)))
-                .addGap(21, 21, 21)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(43, 43, 43)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
-                    .addComponent(clearInfoButton)
                     .addComponent(updateCompanyButton))
                 .addGap(23, 23, 23))
         );
@@ -325,49 +261,11 @@ public class UpdateCompany extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
-    private void clearInfoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearInfoButtonActionPerformed
-        clearCompanyFields();
-    }//GEN-LAST:event_clearInfoButtonActionPerformed
-
     private void updateCompanyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateCompanyButtonActionPerformed
-        updateCompanyToDatabase();
+        deleteCompany();
 
         EventListener.inform(new Event(EventType.DataEvent));
     }//GEN-LAST:event_updateCompanyButtonActionPerformed
-
-    private void websiteFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_websiteFieldKeyReleased
-    }//GEN-LAST:event_websiteFieldKeyReleased
-
-    private void taxCodeFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_taxCodeFieldKeyReleased
-    }//GEN-LAST:event_taxCodeFieldKeyReleased
-
-    private void companyNameFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_companyNameFieldKeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_companyNameFieldKeyReleased
-
-    private void companyNameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_companyNameFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_companyNameFieldActionPerformed
-
-    private void isPublicCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_isPublicCheckboxActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_isPublicCheckboxActionPerformed
-
-    private void revenueFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_revenueFieldKeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_revenueFieldKeyReleased
-
-    private void revenueFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_revenueFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_revenueFieldActionPerformed
-
-    private void marketCapFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_marketCapFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_marketCapFieldActionPerformed
-
-    private void marketCapFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_marketCapFieldKeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_marketCapFieldKeyReleased
 
     private void companyIdComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_companyIdComboBoxActionPerformed
         Company selectedCompany = (Company) companyIdComboBox.getSelectedItem();
@@ -377,7 +275,8 @@ public class UpdateCompany extends javax.swing.JFrame {
                 if (selectedCompany.getTaxCode() != null) {
                     taxCodeField.setText(selectedCompany.getTaxCode());
                 }
-                establishedYearSpinner.setValue(selectedCompany.getEstablishedYear());
+
+                establishedYearField.setText(Integer.toString(selectedCompany.getEstablishedYear()));
 
                 if (selectedCompany.getWebsite() != null) {
                     websiteField.setText(selectedCompany.getWebsite());
@@ -413,93 +312,77 @@ public class UpdateCompany extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_companyIdComboBoxActionPerformed
 
-    private void updateCompanyToDatabase() {
+    private void clearFormFields() {
+        companyNameField.setText("");
+        establishedYearField.setText("");
+        taxCodeField.setText("");
+        websiteField.setText("");
+        revenueField.setText("");
+        isPublicCheckbox.setSelected(false);
+        marketCapField.setText("");
+        addressTextArea.setText("");
+        contactTextArea.setText("");
+        businessTypeTextArea.setText("");
+    }
+
+    private void deleteCompany() {
         try {
             Company selectedCompany = (Company) companyIdComboBox.getSelectedItem();
-            if (selectedCompany == null ) {
-                JOptionPane.showMessageDialog(this, "Please select a company to update!",
-                        "Validation Error", JOptionPane.ERROR_MESSAGE);
+            if (selectedCompany == null) {
+                javax.swing.JOptionPane.showMessageDialog(this,
+                        "Please select a company to delete", "Error",
+                        javax.swing.JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            // Required fields
             String companyCode = selectedCompany.getCompanyCode();
-            String companyName = companyNameField.getText().trim();
 
-            // Validation
-            if (companyCode.isEmpty() || companyName.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Company Code and Company Name are required!", "Validation Error", JOptionPane.ERROR_MESSAGE);
+            // Special validation for company deletion
+            if (!canDeleteCompany(companyCode)) {
+                javax.swing.JOptionPane.showMessageDialog(this,
+                        "Cannot delete company: There are still products that belong to this company.\n" +
+                                "Please delete or reassign all products first.", "Cannot Delete Company",
+                        javax.swing.JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
-            // Create company object
-            Company company = new Company(companyCode, companyName);
+            Company company = new Company();
+            company.setCompanyCode(companyCode);
 
-            // Set optional fields
-            if (!taxCodeField.getText().trim().isEmpty()) {
-                company.setTaxCode(taxCodeField.getText().trim());
-            }
-
-            if (establishedYearSpinner.getValue() != null) {
-                company.setEstablishedYear((Integer) establishedYearSpinner.getValue());
-            }
-
-            if (!websiteField.getText().trim().isEmpty()) {
-                company.setWebsite(websiteField.getText().trim());
-            }
-
-            company.setPublic(isPublicCheckbox.isSelected());
-
-            if (!revenueField.getText().trim().isEmpty()) {
-                company.setRevenue(revenueField.getText().trim());
-            }
-
-            if (!marketCapField.getText().trim().isEmpty()) {
-                company.setMarketCap(marketCapField.getText().trim());
-            }
-
-            // Handle JSON fields
-            if (!addressTextArea.getText().trim().isEmpty()) {
-                try {
-                    Map<String, Object> address = parseJsonToMap(addressTextArea.getText().trim());
-                    company.setAddress(address);
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(this, "Invalid JSON format in Address field!", "JSON Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-            }
-
-            if (!contactTextArea.getText().trim().isEmpty()) {
-                try {
-                    Map<String, Object> contact = parseJsonToMap(contactTextArea.getText().trim());
-                    company.setContact(contact);
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(this, "Invalid JSON format in Contact field!", "JSON Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-            }
-
-            // Handle business types (comma-separated list)
-            if (!businessTypeTextArea.getText().trim().isEmpty()) {
-                List<String> businessTypes = Arrays.asList(businessTypeTextArea.getText().split(","))
-                        .stream()
-                        .map(String::trim)
-                        .filter(s -> !s.isEmpty())
-                        .collect(Collectors.toList());
-                company.setBusinessType(businessTypes);
-            }
-
-            // Insert to database
-            boolean success = DBConnect.update(company);
+            boolean success = DBConnect.delete(company);
             if (success) {
-                JOptionPane.showMessageDialog(this, "Company updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                clearCompanyFields();
+                javax.swing.JOptionPane.showMessageDialog(this,
+                        "Company removed from database!", "Success",
+                        javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                updateScreen();
+                clearFormFields();
             } else {
-                JOptionPane.showMessageDialog(this, "Failed to update company!", "Error", JOptionPane.ERROR_MESSAGE);
+                javax.swing.JOptionPane.showMessageDialog(this,
+                        "Cannot remove company", "Error",
+                        javax.swing.JOptionPane.ERROR_MESSAGE);
             }
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Cannot remove company: " + e.getMessage(), "Error",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private boolean canDeleteCompany(String companyCode) {
+        try {
+            String condition;
+            if (Main.getDatabaseMode() == Main.DatabaseMode.MySQL) {
+                condition = "companyCode = ?";
+            } else {
+                condition = "companyCode : ?}";
+            }
+
+            List<Product> existingProducts = DBConnect.retrieve(Product.class, condition, companyCode);
+            return existingProducts.isEmpty();
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Failed to update company.  " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println("Error checking for existing products: " + e.getMessage());
+            return false;
         }
     }
 
@@ -515,27 +398,9 @@ public class UpdateCompany extends javax.swing.JFrame {
         }
     }
 
-    // Helper Methods
-    private Map<String, Object> parseJsonToMap(String jsonString) {
-        try {
-            return JsonUtility.fromJson(jsonString, Map.class);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid JSON format: " + e.getMessage());
-        }
-    }
-
-    private void clearCompanyFields() {
-        companyIdComboBox.setSelectedItem(-1);
-        companyNameField.setText("");
-        taxCodeField.setText("");
-        establishedYearSpinner.setValue(2000);
-        websiteField.setText("");
-        isPublicCheckbox.setSelected(false);
-        revenueField.setText("");
-        marketCapField.setText("");
-        addressTextArea.setText("");
-        contactTextArea.setText("");
-        businessTypeTextArea.setText("");
+    private void updateScreen() {
+        companyIdComboBox.removeAllItems();
+        loadCompanyComboBox();
     }
 
     public static void main(String[] args) {
@@ -543,17 +408,17 @@ public class UpdateCompany extends javax.swing.JFrame {
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
                  UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(UpdateCompany.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DeleteCompany.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new UpdateCompany().setVisible(true);
+                new DeleteCompany().setVisible(true);
             }
         });
     }
 
-    private void fillComboBox(String companyCode) {
+    private void fillComboBox() {
         try {
             String condition;
             if (Main.getDatabaseMode() == Main.DatabaseMode.MySQL) {
@@ -562,7 +427,7 @@ public class UpdateCompany extends javax.swing.JFrame {
                 condition = "companyCode : ?";
             }
 
-            List<Company> companies = DBConnect.retrieve(Company.class, condition, companyCode);
+            List<Company> companies = DBConnect.retrieveAll(Company.class);
             companyIdComboBox.removeAllItems();
             for (Company company : companies) {
                 companyIdComboBox.addItem(company);
@@ -576,16 +441,14 @@ public class UpdateCompany extends javax.swing.JFrame {
     private javax.swing.JTextArea addressTextArea;
     private javax.swing.JTextArea businessTypeTextArea;
     private javax.swing.JButton cancelButton;
-    private javax.swing.JButton clearInfoButton;
     private javax.swing.JComboBox<Company> companyIdComboBox;
     private javax.swing.JTextField companyNameField;
     private javax.swing.JTextArea contactTextArea;
     private javax.swing.JLabel detailWarnLabel;
-    private javax.swing.JSpinner establishedYearSpinner;
+    private javax.swing.JTextField establishedYearField;
     private javax.swing.JCheckBox isPublicCheckbox;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

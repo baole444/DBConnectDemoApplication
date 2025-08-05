@@ -69,7 +69,7 @@ public class AddCompany extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Add Request");
+        setTitle("Add Company");
         setAlwaysOnTop(true);
         setLocationByPlatform(true);
 
