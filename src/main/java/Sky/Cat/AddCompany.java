@@ -94,18 +94,6 @@ public class AddCompany extends javax.swing.JFrame {
 
         jLabel2.setText("Company Name");
 
-        websiteField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                websiteFieldKeyReleased(evt);
-            }
-        });
-
-        taxCodeField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                taxCodeFieldKeyReleased(evt);
-            }
-        });
-
         jLabel4.setText("Tax Code");
 
         jLabel7.setText("Website URL");
@@ -118,59 +106,15 @@ public class AddCompany extends javax.swing.JFrame {
             }
         });
 
-        companyNameField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                companyNameFieldActionPerformed(evt);
-            }
-        });
-        companyNameField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                companyNameFieldKeyReleased(evt);
-            }
-        });
-
         establishedYearSpinner.setModel(new javax.swing.SpinnerNumberModel(1970, 1, null, 1));
 
         jLabel9.setText("Established Year");
 
-        companyCodeField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                companyCodeFieldKeyReleased(evt);
-            }
-        });
-
         isPublicCheckbox.setText("Public Company");
-        isPublicCheckbox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                isPublicCheckboxActionPerformed(evt);
-            }
-        });
 
         jLabel3.setText("Revenue");
 
-        revenueField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                revenueFieldActionPerformed(evt);
-            }
-        });
-        revenueField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                revenueFieldKeyReleased(evt);
-            }
-        });
-
         jLabel5.setText("Address (JSON)");
-
-        marketCapField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                marketCapFieldActionPerformed(evt);
-            }
-        });
-        marketCapField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                marketCapFieldKeyReleased(evt);
-            }
-        });
 
         jLabel6.setText("Market Cap");
 
@@ -332,44 +276,6 @@ public class AddCompany extends javax.swing.JFrame {
 
         EventListener.inform(new Event(EventType.DataEvent));
     }//GEN-LAST:event_addCompanyButtonActionPerformed
-
-    private void websiteFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_websiteFieldKeyReleased
-    }//GEN-LAST:event_websiteFieldKeyReleased
-
-    private void taxCodeFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_taxCodeFieldKeyReleased
-    }//GEN-LAST:event_taxCodeFieldKeyReleased
-
-    private void companyNameFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_companyNameFieldKeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_companyNameFieldKeyReleased
-
-    private void companyNameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_companyNameFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_companyNameFieldActionPerformed
-
-    private void companyCodeFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_companyCodeFieldKeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_companyCodeFieldKeyReleased
-
-    private void isPublicCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_isPublicCheckboxActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_isPublicCheckboxActionPerformed
-
-    private void revenueFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_revenueFieldKeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_revenueFieldKeyReleased
-
-    private void revenueFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_revenueFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_revenueFieldActionPerformed
-
-    private void marketCapFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_marketCapFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_marketCapFieldActionPerformed
-
-    private void marketCapFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_marketCapFieldKeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_marketCapFieldKeyReleased
 
     private void clearFormFields() {
         taxCodeField.setText(null);

@@ -110,12 +110,6 @@ public class AddProduct extends javax.swing.JFrame {
 
         jLabel2.setText("Product Name");
 
-        importPriceField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                importPriceFieldKeyReleased(evt);
-            }
-        });
-
         jLabel4.setText("Import Price");
 
         jLabel7.setText("Company Code");
@@ -128,39 +122,11 @@ public class AddProduct extends javax.swing.JFrame {
             }
         });
 
-        productNameField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                productNameFieldActionPerformed(evt);
-            }
-        });
-        productNameField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                productNameFieldKeyReleased(evt);
-            }
-        });
-
         jLabel9.setText("Profit Rate");
-
-        productCodeField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                productCodeFieldKeyReleased(evt);
-            }
-        });
 
         jLabel3.setText("Import Date");
 
         jLabel5.setText("Spec. (JSON)");
-
-        warrantyField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                warrantyFieldActionPerformed(evt);
-            }
-        });
-        warrantyField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                warrantyFieldKeyReleased(evt);
-            }
-        });
 
         jLabel6.setText("Warranty");
 
@@ -183,17 +149,6 @@ public class AddProduct extends javax.swing.JFrame {
         jLabel11.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel11.setText("Each type seperate with a comma \",\"");
-
-        profitRateField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                profitRateFieldActionPerformed(evt);
-            }
-        });
-        profitRateField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                profitRateFieldKeyReleased(evt);
-            }
-        });
 
         jLabel12.setText("Stock Quantity");
 
@@ -382,37 +337,6 @@ public class AddProduct extends javax.swing.JFrame {
 
         EventListener.inform(new Event(EventType.DataEvent));
     }//GEN-LAST:event_addProductButtonActionPerformed
-
-    private void importPriceFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_importPriceFieldKeyReleased
-    }//GEN-LAST:event_importPriceFieldKeyReleased
-
-    private void productNameFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productNameFieldKeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_productNameFieldKeyReleased
-
-    private void productNameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productNameFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_productNameFieldActionPerformed
-
-    private void productCodeFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productCodeFieldKeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_productCodeFieldKeyReleased
-
-    private void warrantyFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_warrantyFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_warrantyFieldActionPerformed
-
-    private void warrantyFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_warrantyFieldKeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_warrantyFieldKeyReleased
-
-    private void profitRateFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profitRateFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_profitRateFieldActionPerformed
-
-    private void profitRateFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_profitRateFieldKeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_profitRateFieldKeyReleased
 
     // Helper Methods
     private Map<String, Object> parseJsonToMap(String jsonString) {

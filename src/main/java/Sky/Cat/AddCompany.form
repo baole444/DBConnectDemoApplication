@@ -215,14 +215,8 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="websiteField">
-      <Events>
-        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="websiteFieldKeyReleased"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JTextField" name="taxCodeField">
-      <Events>
-        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="taxCodeFieldKeyReleased"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel4">
       <Properties>
@@ -248,10 +242,6 @@
     <Component class="javax.swing.JLabel" name="detailWarnLabel">
     </Component>
     <Component class="javax.swing.JTextField" name="companyNameField">
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="companyNameFieldActionPerformed"/>
-        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="companyNameFieldKeyReleased"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JSpinner" name="establishedYearSpinner">
       <Properties>
@@ -266,17 +256,11 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="companyCodeField">
-      <Events>
-        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="companyCodeFieldKeyReleased"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JCheckBox" name="isPublicCheckbox">
       <Properties>
         <Property name="text" type="java.lang.String" value="Public Company"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="isPublicCheckboxActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel3">
       <Properties>
@@ -284,10 +268,6 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="revenueField">
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="revenueFieldActionPerformed"/>
-        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="revenueFieldKeyReleased"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel5">
       <Properties>
@@ -295,10 +275,6 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="marketCapField">
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="marketCapFieldActionPerformed"/>
-        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="marketCapFieldKeyReleased"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel6">
       <Properties>

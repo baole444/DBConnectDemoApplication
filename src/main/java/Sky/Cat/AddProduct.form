@@ -232,9 +232,6 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="importPriceField">
-      <Events>
-        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="importPriceFieldKeyReleased"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel4">
       <Properties>
@@ -260,10 +257,6 @@
     <Component class="javax.swing.JLabel" name="detailWarnLabel">
     </Component>
     <Component class="javax.swing.JTextField" name="productNameField">
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="productNameFieldActionPerformed"/>
-        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="productNameFieldKeyReleased"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel9">
       <Properties>
@@ -271,9 +264,6 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="productCodeField">
-      <Events>
-        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="productCodeFieldKeyReleased"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel3">
       <Properties>
@@ -286,10 +276,6 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="warrantyField">
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="warrantyFieldActionPerformed"/>
-        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="warrantyFieldKeyReleased"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel6">
       <Properties>
@@ -361,10 +347,6 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="profitRateField">
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="profitRateFieldActionPerformed"/>
-        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="profitRateFieldKeyReleased"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JComboBox" name="companyCodeComboBox">
       <Properties>
