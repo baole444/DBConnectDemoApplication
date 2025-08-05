@@ -276,7 +276,7 @@ public class Main extends javax.swing.JFrame implements DataListener {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setText("Quick action");
 
-        addRequestButton.setText("Add request");
+        addRequestButton.setText("Add item");
         addRequestButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addRequestButtonActionPerformed(evt);
@@ -285,7 +285,7 @@ public class Main extends javax.swing.JFrame implements DataListener {
 
         jSeparator7.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
-        modifyRequestButton.setText("Modify selected request");
+        modifyRequestButton.setText("Modify selected item");
         modifyRequestButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 modifyRequestButtonActionPerformed(evt);
@@ -294,7 +294,7 @@ public class Main extends javax.swing.JFrame implements DataListener {
 
         jSeparator8.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
-        deleteRequestButton.setText("Delete selected request");
+        deleteRequestButton.setText("Delete selected item");
         deleteRequestButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 deleteRequestButtonActionPerformed(evt);
@@ -563,8 +563,16 @@ public class Main extends javax.swing.JFrame implements DataListener {
     private void miUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miUpdateActionPerformed
         if (databaseMode == DatabaseMode.None) return;
 
-        UpdateRequest updateRequest = new UpdateRequest();
-        updateRequest.setVisible(true);
+        switch (currentTableType) {
+            case Company -> {
+                UpdateCompany updateCompany = new UpdateCompany();
+                updateCompany.setVisible(true);
+            }
+            case Product -> {
+                UpdateProduct updateProduct = new UpdateProduct();
+                updateProduct.setVisible(true);
+            }
+        }
     }//GEN-LAST:event_miUpdateActionPerformed
 
     private void modifyRequestButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modifyRequestButtonActionPerformed
@@ -572,22 +580,27 @@ public class Main extends javax.swing.JFrame implements DataListener {
 
         int row = DisplayTable.getSelectedRow();
 
-        if (row != -1) {
-            ITRequest itRequest = ((ITRequestJTable) DisplayTable.getModel()).getRequestAt(row);
-
-            UpdateRequest updateRequest;
-
-            if (databaseMode == DatabaseMode.MySQL) {
-                int target = itRequest.getReqID();
-                updateRequest = new UpdateRequest(target);
-            } else if (databaseMode == DatabaseMode.MongoDB) {
-                ObjectId target = itRequest.get_id();
-                updateRequest = new UpdateRequest(target);
-            } else {
-                updateRequest = new UpdateRequest();
+        switch (currentTableType) {
+            case Company -> {
+                if (row != -1) {
+                    Company company = ((CompanyJTable) DisplayTable.getModel()).getCompanyAt(row);
+                    UpdateCompany updateCompany = new UpdateCompany(company.getCompanyCode());
+                    updateCompany.setVisible(true);
+                } else {
+                    UpdateCompany updateCompany = new UpdateCompany();
+                    updateCompany.setVisible(true);
+                }
             }
-
-            updateRequest.setVisible(true);
+            case Product -> {
+                if (row != -1) {
+                    Product product = ((ProductJTable) DisplayTable.getModel()).getProductAt(row);
+                    UpdateProduct updateProduct = new UpdateProduct(product.getProductCode());
+                    updateProduct.setVisible(true);
+                } else {
+                    UpdateProduct updateProduct = new UpdateProduct();
+                    updateProduct.setVisible(true);
+                }
+            }
         }
     }//GEN-LAST:event_modifyRequestButtonActionPerformed
 

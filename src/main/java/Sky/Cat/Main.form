@@ -405,7 +405,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="addRequestButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Add request"/>
+        <Property name="text" type="java.lang.String" value="Add item"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addRequestButtonActionPerformed"/>
@@ -418,7 +418,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="modifyRequestButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Modify selected request"/>
+        <Property name="text" type="java.lang.String" value="Modify selected item"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="modifyRequestButtonActionPerformed"/>
@@ -431,7 +431,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="deleteRequestButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Delete selected request"/>
+        <Property name="text" type="java.lang.String" value="Delete selected item"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteRequestButtonActionPerformed"/>
